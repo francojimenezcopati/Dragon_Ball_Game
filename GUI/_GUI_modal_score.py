@@ -1,0 +1,357 @@
+import pygame
+from pygame.locals import *
+from pygame.image import load
+
+from .GUI_button import *
+from .GUI_button_image import *
+from .GUI_form import *
+from .GUI_label import *
+from .GUI_slider import *
+from .GUI_widget import *
+from .ajustes import *
+
+class Modal(Form):
+    def __init__(
+        self,
+        screen,
+        x,
+        y,
+        w,
+        h,
+        color_background,
+        color_border,
+        active,
+        path,
+        score,
+        margen_y,
+        margen_x,
+        espacio,
+        return_funcion
+    ):
+        super().__init__(
+            screen, x, y, w, h, color_background, color_border, active
+        )
+        
+        self.return_funcion = return_funcion
+
+        aux_imagen = load(path)
+        aux_imagen = pygame.transform.scale(aux_imagen, (w, h))
+
+        self._slave = aux_imagen
+        self.score = score
+
+        self._margen_y = margen_y
+        self._margen_x = margen_x
+
+        self.lbl_col1 = Label(
+            self._slave,
+            self._margen_x + 10,
+            20,
+            w / 2 - self._margen_x - 10,
+            50,
+            "Jugador",
+            "Verdana",
+            30,
+            "white",
+            "menu\API FORMS\\bar.png",
+        )
+        self.lbl_col2 = Label(
+            self._slave,
+            self._margen_x + 10 + w / 2 - self._margen_x - 10,
+            20,
+            w / 2 - self._margen_x - 10,
+            50,
+            "Tiempo",
+            "Verdana",
+            30,
+            "white",
+            "menu\API FORMS\\bar.png",
+        )
+
+        self.lista_widgets.append(self.lbl_col1)
+        self.lista_widgets.append(self.lbl_col2)
+
+        pos_inicial_y = margen_y
+
+        for dict in self.score:
+            pos_inicial_x = margen_x
+            for key, value in dict.items():
+                cadena = ""
+                cadena = f"{value}"
+                jugador = Label(
+                    self._slave,
+                    pos_inicial_x,
+                    pos_inicial_y,
+                    w / 2 - margen_x,
+                    100,
+                    cadena,
+                    "Verdana",
+                    30,
+                    "white",
+                    "menu\API FORMS\Table.png",
+                )
+                self.lista_widgets.append(jugador)
+                pos_inicial_x += w / 2 - margen_x
+            pos_inicial_y += 100 + espacio
+
+        self.btn_home = Button_Image(
+            self._slave,
+            x,
+            y,
+            w - 70,
+            h - 70,
+            50,
+            50,
+            "menu\API FORMS\home.png",
+            self.btn_home_click,
+            "a"
+        )
+        self.lista_widgets.append(self.btn_home)
+
+    def btn_home_click(self, param):
+        print('a')
+        self.return_funcion(True)
+        self.end_dialog()
+
+    def update(self, lista_eventos):
+        if self.active:
+            for widget in self.lista_widgets:
+                widget.update(lista_eventos)
+            self.draw()
+
+class ModalBotones(Form):
+    def __init__(
+        self,
+        screen,
+        x,
+        y,
+        w,
+        h,
+        color_background,
+        color_border,
+        active,
+        niveles = False,
+        opciones = False,
+        funcion = None,
+        func_opc = None,
+        flag_play = None
+    ):
+        super().__init__(
+            screen, x, y, w, h, color_background, color_border, active
+        )
+
+        self.flag_play = flag_play
+        
+        mute_img = pygame.image.load("Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Mute.png").convert_alpha()
+        self.mute_img = pygame.transform.scale(mute_img, (96, 96))
+        unmute_img = pygame.image.load("Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Unmute.png").convert_alpha()
+        self.unmute_img = pygame.transform.scale(unmute_img, (96, 96))
+
+        self.volumen = 0.2
+
+        self.func_opc = func_opc
+        self.funcion = funcion
+        
+        self.niveles = niveles
+        self.opciones = opciones
+        
+        if self.niveles:
+            img = pygame.image.load(self.niveles).convert_alpha()
+            self.img = pygame.transform.scale(img, (w, h))
+        else:
+            img = pygame.image.load(self.opciones).convert_alpha()
+            self.img = pygame.transform.scale(img, (w, h))
+        
+
+        self._slave = self.img
+
+        self.img = self.img.convert_alpha()
+
+        if self.niveles:
+            x_btn = CENTRAR_BOTON
+            y_btn = h - 150
+            w_btn = LARGO_BOTON
+            h_btn = ALTURA_BOTON
+        else:
+            x_btn = CENTRAR_BOTON
+            y_btn = 40
+            w_btn = LARGO_BOTON
+            h_btn = ALTURA_BOTON
+
+        
+        
+        if self.niveles:
+            self.btn_atras = Button_Image(
+                self._slave,
+                x,
+                y,
+                x_btn,
+                y_btn,
+                w_btn,
+                h_btn,
+                "Dragon_Ball\\resources\GUI\\botones\Defined\\atras.png",
+                self.btn_atras_click,
+                'abccc'
+            )
+            self.btn_lvl_1 = Button_Image(
+                self._slave,
+                x,
+                y,
+                BOTON_2_CENTRAR,
+                y_btn-Y_ESPACIADO_BOTONES_2,
+                BOTON_2_ANCHO,
+                BOTON_2_ALTO,
+                "Dragon_Ball\\resources\GUI\\botones\\Defined\\LVL_2_I.png",
+                self.btn_lvl_click,
+                '2'
+            )
+            self.btn_lvl_2 = Button_Image(
+                self._slave,
+                x,
+                y,
+                BOTON_2_CENTRAR,
+                y_btn-Y_ESPACIADO_BOTONES_2*2,
+                BOTON_2_ANCHO,
+                BOTON_2_ALTO,
+                "Dragon_Ball\\resources\GUI\\botones\\Defined\\LVL_1_I.png",
+                self.btn_lvl_click,
+                '1'
+            )
+            self.btn_lvl_3 = Button_Image(
+                self._slave,
+                x,
+                y,
+                BOTON_2_CENTRAR,
+                y_btn-Y_ESPACIADO_BOTONES_2*3,
+                BOTON_2_ANCHO,
+                BOTON_2_ALTO,
+                "Dragon_Ball\\resources\GUI\\botones\\Defined\\LVL_0_I.png",
+                self.btn_lvl_click,
+                '0'
+            )
+            self.btn_titulo = Button_Image(
+                self._slave,
+                x,
+                y,
+                CENTRAR_BOTON,
+                y_btn-Y_ESPACIADO_BOTONES_2*4,
+                LARGO_BOTON,
+                ALTURA_BOTON,
+                "Dragon_Ball\\resources\GUI\\botones\\Defined\\niveles_titulo.png",
+            )
+            self.lista_widgets.append(self.btn_lvl_1)
+            self.lista_widgets.append(self.btn_lvl_2)
+            self.lista_widgets.append(self.btn_lvl_3)
+        else:
+            self.btn_titulo = Button_Image(
+                self._slave,
+                x,
+                y,
+                CENTRAR_BOTON_OPCIONES,
+                y_btn,
+                LARGO_BOTON,
+                ALTURA_BOTON,
+                "Dragon_Ball\\resources\GUI\\botones\\Defined\\opciones_titulo.png",
+            )
+            
+            if self.flag_play:
+                path = "Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Unmute.png"
+            else:
+                path = "Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Mute.png"
+            
+            self.btn_mute_music = Button_Image(
+                self._slave,
+                x,
+                y,
+                255,
+                y_btn + 160,
+                96,
+                96,
+                path,
+                self.alternar_musica,
+                'a'
+            )
+            
+            self.label_volumen = Label(
+                self._slave,
+                470,
+                347,
+                100,
+                50,
+                "20%",
+                "Comic Sans",
+                15,
+                "white",
+                "menu\API FORMS\\Table.png", # -> LE PUEDO PONER CUALQUIER IMAGEN
+            )
+            self.slider_volumen = Slider(
+                self._slave, x, y, 50, 360, 400, 15, self.volumen, "Blue", "cyan"
+            )
+            
+            self.btn_atras = Button_Image(
+                self._slave,
+                x,
+                y,
+                183,
+                490,
+                LARGO_BOTON*0.7,
+                ALTURA_BOTON*0.7,
+                "Dragon_Ball\\resources\GUI\\botones\Defined\\atras.png",
+                self.btn_atras_click,
+                'abccc'
+            )
+            self.lista_widgets.append(self.btn_mute_music)
+            self.lista_widgets.append(self.label_volumen)
+            self.lista_widgets.append(self.slider_volumen)
+        self.lista_widgets.append(self.btn_atras)
+        self.lista_widgets.append(self.btn_titulo)
+
+    def alternar_musica(self, param):
+        if self.flag_play:
+            self.flag_play = False
+            self.btn_mute_music._slave = self.mute_img
+        else:
+            self.flag_play = True
+            self.btn_mute_music._slave = self.unmute_img
+        self.func_opc(False, True, self.flag_play, self.volumen, False, False)
+
+    def set_volumen(self):
+        volumen_previo = self.volumen
+        self.volumen = self.slider_volumen.get_value()/3
+        self.label_volumen.update('')
+        self.label_volumen.set_text(f"{round(self.volumen * 100*3)}%")
+        if volumen_previo != self.volumen:
+            self.func_opc(True, False, self.flag_play, self.volumen, False, False)
+
+
+    def btn_lvl_click(self, param):
+        if param == '0':
+            print('0')
+            self.funcion(0)
+        elif param == '1':
+            print('1')
+            self.funcion(1)
+        else:
+            print('2')
+            self.funcion(2)
+
+    def btn_atras_click(self, param):
+        self.end_dialog()
+
+    def render(self):
+        # img = pygame.image.load('Dragon_Ball\\resources\GUI\menu_general.png')
+        # img = pygame.transform.scale(img, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        
+        
+        self._slave.blit(self.img, (0,0))
+        # self._slave.blit(self.img, (0,0))
+
+    def update(self, lista_eventos):
+        if self.active:
+            self.draw()
+            self.render()
+            for widget in self.lista_widgets:
+                widget.update(lista_eventos)
+            if self.opciones:
+                self.set_volumen()
+            
