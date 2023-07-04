@@ -5,6 +5,7 @@ from ajustes import *
 from cargar_imagenes import *
 from _2_Personaje import Personaje
 from _3_Proyectil import Proyectil
+from config import *
 
 class Jugador(Personaje):
     def __init__(self, pantalla, potencia_salto, velocidad, vida, ataque, pos):
@@ -13,14 +14,8 @@ class Jugador(Personaje):
         
         self.god_mode = False
         
+        self.score = 0
         
-        
-        self.pikcup_sound = pygame.mixer.Sound('Dragon_Ball\\resources\sounds\pickup.wav')
-        self.transformacion_sound = pygame.mixer.Sound('Dragon_Ball\\resources\sounds\\transformacion.wav')
-        self.pikcup_sound.set_volume(0.5)
-        self.transformacion_sound.set_volume(0.2)
-        self.daño_sound = pygame.mixer.Sound('Dragon_Ball\\resources\sounds\\daño.wav')
-        self.daño_sound.set_volume(0.2)
         
         # GD
         self.gd_counter = 0
@@ -31,6 +26,7 @@ class Jugador(Personaje):
         x = self.rect.x - 10
         y = self.rect.y + 100
         self.gd = Proyectil((x,y), self.gd_img, 0, 1, 100)
+        self.draw_gd = False
         
         # SSJ
         self.ssj_count = 0
@@ -120,7 +116,6 @@ class Jugador(Personaje):
     def verificar_colision_enemigos(self, enemigos):
         colision = pygame.sprite.spritecollide(self, enemigos, False)
         if colision:
-            # print(colision[0].velocidad)
             if self.tiempo_inmortalidad == 0:
                 if self.vida > 0 and colision[0].vida > 0:
                     self.herido = True
@@ -129,7 +124,7 @@ class Jugador(Personaje):
     def verificar_colision_items(self, items):
         colision = pygame.sprite.spritecollide(self, items, True)
         if colision:
-            self.pikcup_sound.play()
+            pikcup_sound.play()
             self.vida += 1
             if self.vida > 3 and not self.esta_ssj:
                 self.vida = 3
@@ -211,27 +206,49 @@ class Jugador(Personaje):
             self.rect.y += 31
 
     def ejecutar_gd(self, dt):
-        pass
+        self.direccion.x = 0
+        
+        self.frame_index += self.velocidad_animacion_muerte * dt
+        if int(self.frame_index) >= 5:
+            self.gd.velocidad = 501
+        else:
+            x = self.rect.x - 60
+            y = self.rect.y - 150
+            self.gd.rect.x = x
+            self.gd.rect.y = y
+        if self.frame_index >= len(self.frames_gd):
+            self.frame_index = 0
+            self.tirar_gd = False
+            self.gd_counter = 0
+        
+        self.image = self.frames_gd[int(self.frame_index)]
 
     def update(self, dt, pantalla, desplazamiento_mundo):
         if self.vida <= 0:
             pantalla.blit(self.hud_herido, (0,0))
             self.tiempo_muerte += dt
             if 0.01 < self.tiempo_muerte < 0.05:
-                self.daño_sound.play()
+                daño_sound.play()
             self.muerte(dt)
         else:
-            self.gd.draw(pantalla)
-            self.gd.update(dt, desplazamiento_mundo)
             if self.transformandose:
                 self.transformacion(dt)
             else:
                 if self.tirar_gd:
+                    self.draw_gd = True
+                    if not self.gd.is_killed:
+                        self.gd.update(dt, desplazamiento_mundo)
+                        self.gd.draw(pantalla)
                     self.ejecutar_gd(dt)
                 else:
+                    if self.draw_gd == True:
+                        if not self.gd.is_killed:
+                            self.gd.update(dt, desplazamiento_mundo)
+                            self.gd.draw(pantalla)
                     if self.god_mode:
                         self.en_piso = True
                         self.ssj_count = UMBRAL_SSJ
+                        self.gd_counter = UMBRAL_GENKI_DAMA
 
                     if self.ssj_count > UMBRAL_SSJ:
                         self.ssj_count = UMBRAL_SSJ
@@ -240,7 +257,7 @@ class Jugador(Personaje):
                         pantalla.blit(self.hud_herido, (0,0))
                         self.tiempo_inmortalidad += dt
                         if 0.01 < self.tiempo_inmortalidad < 0.05:
-                            self.daño_sound.play()
+                            daño_sound.play()
                     if self.tiempo_inmortalidad > 3:
                         self.tiempo_inmortalidad = 0
                         self.herido = False

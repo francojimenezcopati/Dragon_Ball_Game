@@ -8,6 +8,7 @@ from .GUI_form import *
 from .GUI_label import *
 from .GUI_slider import *
 from .GUI_widget import *
+from ._GUI_form_final import leer_puntaje
 from .ajustes import *
 
 class Modal(Form):
@@ -47,7 +48,7 @@ class Modal(Form):
             self._slave,
             self._margen_x + 10,
             20,
-            w / 2 - self._margen_x - 10,
+            w / 3 - self._margen_x - 10,
             50,
             "Jugador",
             "Verdana",
@@ -57,11 +58,23 @@ class Modal(Form):
         )
         self.lbl_col2 = Label(
             self._slave,
-            self._margen_x + 10 + w / 2 - self._margen_x - 10,
+            self._margen_x + 10 + w / 3 - self._margen_x - 10,
             20,
-            w / 2 - self._margen_x - 10,
+            w / 3 - self._margen_x - 10,
             50,
             "Tiempo",
+            "Verdana",
+            30,
+            "white",
+            "menu\API FORMS\\bar.png",
+        )
+        self.lbl_col3 = Label(
+            self._slave,
+            self._margen_x + 10 + w*2 / 3 - self._margen_x - 10,
+            20,
+            w / 3 - self._margen_x - 10,
+            50,
+            "Score",
             "Verdana",
             30,
             "white",
@@ -70,19 +83,19 @@ class Modal(Form):
 
         self.lista_widgets.append(self.lbl_col1)
         self.lista_widgets.append(self.lbl_col2)
+        self.lista_widgets.append(self.lbl_col3)
 
         pos_inicial_y = margen_y
 
         for dict in self.score:
             pos_inicial_x = margen_x
             for key, value in dict.items():
-                cadena = ""
                 cadena = f"{value}"
                 jugador = Label(
                     self._slave,
                     pos_inicial_x,
                     pos_inicial_y,
-                    w / 2 - margen_x,
+                    w / 3 - margen_x,
                     100,
                     cadena,
                     "Verdana",
@@ -91,7 +104,7 @@ class Modal(Form):
                     "menu\API FORMS\Table.png",
                 )
                 self.lista_widgets.append(jugador)
-                pos_inicial_x += w / 2 - margen_x
+                pos_inicial_x += w / 3 - margen_x
             pos_inicial_y += 100 + espacio
 
         self.btn_home = Button_Image(
@@ -109,7 +122,6 @@ class Modal(Form):
         self.lista_widgets.append(self.btn_home)
 
     def btn_home_click(self, param):
-        print('a')
         self.return_funcion(True)
         self.end_dialog()
 
@@ -134,7 +146,8 @@ class ModalBotones(Form):
         opciones = False,
         funcion = None,
         func_opc = None,
-        flag_play = None
+        flag_play = None,
+        volumen = None
     ):
         super().__init__(
             screen, x, y, w, h, color_background, color_border, active
@@ -147,7 +160,7 @@ class ModalBotones(Form):
         unmute_img = pygame.image.load("Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Unmute.png").convert_alpha()
         self.unmute_img = pygame.transform.scale(unmute_img, (96, 96))
 
-        self.volumen = 0.2
+        self.volumen = volumen
 
         self.func_opc = func_opc
         self.funcion = funcion
@@ -181,6 +194,20 @@ class ModalBotones(Form):
         
         
         if self.niveles:
+            
+            if leer_puntaje('nivel_1') != None:
+                lvl_1 = 'LVL_0_C'
+            else:
+                lvl_1 = 'LVL_0_I'
+            if leer_puntaje('nivel_2') != None:
+                lvl_2 = 'LVL_1_C'
+            else:
+                lvl_2 = 'LVL_1_I'
+            if leer_puntaje('nivel_3') != None:
+                lvl_3 = 'LVL_2_C'
+            else:
+                lvl_3 = 'LVL_2_I'
+            
             self.btn_atras = Button_Image(
                 self._slave,
                 x,
@@ -193,7 +220,7 @@ class ModalBotones(Form):
                 self.btn_atras_click,
                 'abccc'
             )
-            self.btn_lvl_1 = Button_Image(
+            self.btn_lvl_3 = Button_Image(
                 self._slave,
                 x,
                 y,
@@ -201,7 +228,7 @@ class ModalBotones(Form):
                 y_btn-Y_ESPACIADO_BOTONES_2,
                 BOTON_2_ANCHO,
                 BOTON_2_ALTO,
-                "Dragon_Ball\\resources\GUI\\botones\\Defined\\LVL_2_I.png",
+                f"Dragon_Ball\\resources\GUI\\botones\\Defined\\{lvl_3}.png",
                 self.btn_lvl_click,
                 '2'
             )
@@ -213,11 +240,11 @@ class ModalBotones(Form):
                 y_btn-Y_ESPACIADO_BOTONES_2*2,
                 BOTON_2_ANCHO,
                 BOTON_2_ALTO,
-                "Dragon_Ball\\resources\GUI\\botones\\Defined\\LVL_1_I.png",
+                f"Dragon_Ball\\resources\GUI\\botones\\Defined\\{lvl_2}.png",
                 self.btn_lvl_click,
                 '1'
             )
-            self.btn_lvl_3 = Button_Image(
+            self.btn_lvl_1 = Button_Image(
                 self._slave,
                 x,
                 y,
@@ -225,7 +252,7 @@ class ModalBotones(Form):
                 y_btn-Y_ESPACIADO_BOTONES_2*3,
                 BOTON_2_ANCHO,
                 BOTON_2_ALTO,
-                "Dragon_Ball\\resources\GUI\\botones\\Defined\\LVL_0_I.png",
+                f"Dragon_Ball\\resources\GUI\\botones\\Defined\\{lvl_1}.png",
                 self.btn_lvl_click,
                 '0'
             )
@@ -317,22 +344,20 @@ class ModalBotones(Form):
 
     def set_volumen(self):
         volumen_previo = self.volumen
-        self.volumen = self.slider_volumen.get_value()/3
+        self.volumen = self.slider_volumen.get_value()
         self.label_volumen.update('')
-        self.label_volumen.set_text(f"{round(self.volumen * 100*3)}%")
+        self.label_volumen.set_text(f"{round(self.volumen * 100)}%")
         if volumen_previo != self.volumen:
-            self.func_opc(True, False, self.flag_play, self.volumen, False, False)
+            if self.flag_play:
+                self.func_opc(True, False, self.flag_play, self.volumen, False, False)
 
 
     def btn_lvl_click(self, param):
         if param == '0':
-            print('0')
             self.funcion(0)
         elif param == '1':
-            print('1')
             self.funcion(1)
         else:
-            print('2')
             self.funcion(2)
 
     def btn_atras_click(self, param):

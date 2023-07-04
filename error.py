@@ -1,0 +1,4 @@
+
+
+def error():
+    print('error')

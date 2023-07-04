@@ -1,4 +1,6 @@
-import pygame, sys
+import pygame, random
+from pygame.math import Vector2 as vector
+
 from ajustes import *
 from _1_ObjetoJuego import Objeto, Cielo
 from _2_Plataforma import Plataforma, Hongo
@@ -9,6 +11,7 @@ from _3_Recompensa import Recompensa
 from _3_Trampa import Mar, Trampa, TrampaLaser
 from importar_niveles import importar_csv_layout
 from cargar_imagenes import cargar_terreno, cargar_imagenes_carpeta
+from config import *
 
 
 class Nivel:
@@ -18,14 +21,25 @@ class Nivel:
         self.running = True
         
         #---------- LVL FINAL ---------------
-        
-        self.flag_entrada = False
-        self.flag_spawnear_enemigos = False
-        self.flag_invencibilidad = False
-        
-        self.tiempo_invencibilidad = 0
-        
-        self.jefe_setup()
+        if nivel_3:
+            self.flag_entrada = True
+            self.flag_spawnear_enemigos = False
+            self.flag_invencibilidad = False
+            
+            self.tiempo_invencibilidad = 0
+            
+            self.jefe_setup()
+            
+            self.puerta_cerrada = Plataforma((-5,-5),(1,1), None, False)
+            
+            self.tiempo_spawn_enemigos_disparan = 0
+            self.tiempo_spawn_enemigos_capa = 0
+            
+            self.x_spawn_disparan = None
+            self.y_spawn_disparan_arriba = TILE_SIZE
+            self.y_spawn_disparan_abajo = 4 * TILE_SIZE
+            
+            self.x_y_cerrar = (TILE_SIZE*3, 8 * TILE_SIZE)
         
         #---------- --------- ---------------
         
@@ -38,9 +52,7 @@ class Nivel:
         self.tiempo = 0
         self.tiempo_salto = 0
         
-        self.bg_audio = pygame.mixer.Sound('Dragon_Ball\\resources\sounds\\bg_game_music.mp3')
-        self.bg_audio.set_volume(0.1)
-        self.bg_audio.play(-1)
+        bg_audio_game.play(-1)
         
         # texto
         self.font = pygame.font.Font('freesansbold.ttf', 32)
@@ -100,6 +112,10 @@ class Nivel:
         fondo_cueva_layout = importar_csv_layout(data_nivel['fondo_cueva'])
         self.sprites_fondo_cueva = self.crear_grupo_sprites(fondo_cueva_layout, 'fondo_cueva')
         
+        if nivel_3:
+            for pincho in self.sprites_pinchos:
+                self.pincho_rect = pincho.rect
+        
         if not self.is_nivel_2:
             # mar
             largo = len(terreno_layout[0]) * TILE_SIZE
@@ -127,18 +143,48 @@ class Nivel:
         if self.flag_entrada:
             entro = pygame.sprite.spritecollide(self.jugador.sprite, self.sprites_restricciones, False)
             if entro:
+                self.x_spawn_disparan
                 self.cerrar_entrada()
                 self.flag_spawnear_enemigos = True
                 self.flag_entrada = False
     
-    def spawnear_enemigos(self):
-        pass
+    def spawnear_enemigos(self, dt):
+        self.x_spawn_disparan = self.pincho_rect.x
+        # print(f'pincho:{self.pincho_rect.x}')
+        # print(f'jugador:{self.jugador.sprite.rect.x}')
+        # print(f'resultado:{self.x_spawn_disparan}')
+        
+        self.tiempo_spawn_enemigos_disparan += dt
+        if self.tiempo_spawn_enemigos_disparan > VELOCIDAD_SPAWN_DISPARAN:
+            self.tiempo_spawn_enemigos_disparan = 0
+            enemigo = Enemigo(VELOCIDAD_ENEMIGOS, (self.x_spawn_disparan,self.y_spawn_disparan_arriba), 2, 1, 0)
+            self.sprites_enemigos.add(enemigo)
+            
+            enemigo = Enemigo(VELOCIDAD_ENEMIGOS, (self.x_spawn_disparan,self.y_spawn_disparan_abajo), 2, 1, 0)
+            self.sprites_enemigos.add(enemigo)
+        
+        self.tiempo_spawn_enemigos_capa += dt
+        if self.tiempo_spawn_enemigos_capa > VELOCIDAD_SPAWN_CAPA:
+            self.tiempo_spawn_enemigos_capa = 0
+            x = random.randint(5, 900)
+            enemigo_capa = Enemigo(VELOCIDAD_ENEMIGOS, (x, 0), 2, 1, 2)
+            enemigo_capa.direccion.x = -1
+            self.sprites_enemigos.add(enemigo_capa)
+            x = random.randint(5, 900)
+            enemigo_capa = Enemigo(VELOCIDAD_ENEMIGOS, (x, 0), 2, 1, 2)
+            enemigo_capa.direccion.x = -1
+            self.sprites_enemigos.add(enemigo_capa)
+            x = random.randint(5, 900)
+            enemigo_capa = Enemigo(VELOCIDAD_ENEMIGOS, (x, 0), 2, 1, 2)
+            enemigo_capa.direccion.x = -1
+            self.sprites_enemigos.add(enemigo_capa)
     
     def cerrar_entrada(self):
-        pass
+        self.puerta_cerrada = Plataforma(self.x_y_cerrar, (64,64), None, False)
+        self.sprites_terreno.add(self.puerta_cerrada)
     
     #---------- --------- ---------------
-    
+
 
     def crear_grupo_sprites(self,layout,tipo):
         grupo = pygame.sprite.Group()
@@ -241,8 +287,10 @@ class Nivel:
             jugador.velocidad = VELOCIDAD_JUGADOR
     
     def get_input(self, dt, eventos):
+        global transformacion_sound
         jugador = self.jugador.sprite
         for evento in eventos:
+            # if evento.type
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_TAB:
                     self.modo = not self.modo
@@ -250,7 +298,7 @@ class Nivel:
                     jugador.disparar()
                 elif evento.key == pygame.K_d and jugador.vida > 0 and jugador.ssj_count == UMBRAL_SSJ and not jugador.esta_ssj and not jugador.transformandose:
                     jugador.transformandose = True
-                    jugador.transformacion_sound.play()
+                    transformacion_sound.play()
                     jugador.frame_index = 0
                 elif (
                     jugador
@@ -261,7 +309,7 @@ class Nivel:
                     jugador.esta_saltando = True
                     jugador.en_piso = False
                     jugador.saltar(dt)
-                elif not jugador.tirar_gd and evento.key == pygame.K_s and jugador.vida > 0 and jugador.gd_count == UMBRAL_GENKI_DAMA:
+                elif not jugador.tirar_gd and evento.key == pygame.K_s and jugador.vida > 0 and jugador.gd_counter >= UMBRAL_GENKI_DAMA:
                     jugador.tirar_gd = True
                 elif evento.key == pygame.K_COMMA and jugador:
                     jugador.god_mode = not jugador.god_mode
@@ -361,6 +409,7 @@ class Nivel:
             colisiono = proyectil.verificar_objetivo(self.sprites_enemigos, self.sprites_terreno)
             if colisiono:
                 jugador.ssj_count += 1
+                jugador.score += 10
             
             if self.is_lvl_3:
                 headshot = proyectil.verificar_objetivo(self.jefe, self.sprites_terreno, True)
@@ -368,6 +417,7 @@ class Nivel:
                     self.jugador.sprite.gd_counter += 1
                     if self.jugador.sprite.gd_counter > UMBRAL_GENKI_DAMA:
                         self.jugador.sprite.gd_counter = UMBRAL_GENKI_DAMA
+                
         
         if not self.menu_victoria:
             self.menu_victoria = jugador.verificar_colision_final(self.final)
@@ -384,7 +434,39 @@ class Nivel:
     
     def stop(self):
         self.running = False
-        self.bg_audio.stop()
+        bg_audio_game.stop()
+    
+    def ejecutar_lvl_3(self, dt):
+        if self.jugador.sprite:
+            #-- jefe --
+            self.checkear_entrada_zona_jefe()
+
+            if self.flag_spawnear_enemigos:
+                self.spawnear_enemigos(dt)
+            
+            if not self.jefe.is_killed:
+                self.jefe.verificar_colision_jugador(self.jugador)
+            
+            if not self.flag_invencibilidad:
+                jugador_herido = self.jefe.verificar_colision_rayo(self.jugador)
+                if jugador_herido:
+                    self.flag_invencibilidad = not self.flag_invencibilidad
+            else:
+                self.jugador.sprite.herido = True
+                self.tiempo_invencibilidad += dt
+                if self.tiempo_invencibilidad > 1:
+                    self.tiempo_invencibilidad = 0
+                    self.flag_invencibilidad = False
+            
+            kill = self.jugador.sprite.gd.verificar_objetivo(self.jefe, self.sprites_terreno, True, True)
+            if kill == 'kill':
+                self.flag_spawnear_enemigos = False
+                self.jefe.is_killed = True
+            
+            if not self.jefe.is_killed:
+                self.jefe.update_jefe(dt, self.desplazamiento_mundo, self.pantalla)
+                self.jefe.draw_jefe(self.pantalla)
+            #-- ---- --
     
     def run(self, dt, eventos):
         if self.running:
@@ -400,23 +482,8 @@ class Nivel:
             self.draw_all(dt)
             
             if self.is_lvl_3:
-                #-- jefe --
-                self.jefe.verificar_colision_jugador(self.jugador)
+                self.ejecutar_lvl_3(dt)
                 
-                if not self.flag_invencibilidad:
-                    jugador_herido = self.jefe.verificar_colision_rayo(self.jugador)
-                    if jugador_herido:
-                        self.flag_invencibilidad = not self.flag_invencibilidad
-                else:
-                    self.jugador.sprite.herido = True
-                    self.tiempo_invencibilidad += dt
-                    if self.tiempo_invencibilidad > 1:
-                        self.tiempo_invencibilidad = 0
-                        self.flag_invencibilidad = False
-                
-                self.jefe.update_jefe(dt, self.desplazamiento_mundo, self.pantalla)
-                self.jefe.draw_jefe(self.pantalla)
-                #-- ---- --
             
             self.tiempo += dt
             self.dibujar_tiempo()
@@ -443,6 +510,9 @@ class Nivel:
                     for trampa in self.sprites_trampa_laser:
                         pygame.draw.rect(self.pantalla, (255, 0, 0), trampa.rect, 2)
                 elif self.is_lvl_3:
-                    pygame.draw.rect(self.pantalla, (255, 0, 0), self.jefe.rect, 2)
-                    pygame.draw.rect(self.pantalla, (255, 0, 0), self.jefe.rayo_rect, 2)
-                    pygame.draw.rect(self.pantalla, (0, 255, 0), self.jefe.head_rect, 2)
+                    if self.jefe:
+                        pygame.draw.rect(self.pantalla, (255, 0, 0), self.jefe.rect, 2)
+                        pygame.draw.rect(self.pantalla, (255, 0, 0), self.jefe.rayo_rect, 2)
+                        pygame.draw.rect(self.pantalla, (0, 255, 0), self.jefe.head_rect, 2)
+                    if jugador.gd:
+                        pygame.draw.rect(self.pantalla, (0, 255, 0), jugador.gd.rect, 2)

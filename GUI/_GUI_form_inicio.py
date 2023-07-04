@@ -7,7 +7,7 @@ from .GUI_form import *
 from .GUI_label import *
 from .GUI_slider import *
 from .GUI_widget import *
-from ._GUI_modal_score import *
+from ._GUI_modales import *
 from .ajustes import *
 
 
@@ -35,12 +35,6 @@ class FormInicio(Form):
             border_size,
             active,
         )
-        
-        # pygame.mixer.init()
-        # self.volumen = 0.1
-        
-        # self.bg_music = pygame.mixer.Sound("Dragon_Ball\\resources\GUI\musica\\bg_menu_music.mp3")
-        # self.bg_music.set_volume(self.volumen)
         
         
         self.tiempo_parpadeo = 0

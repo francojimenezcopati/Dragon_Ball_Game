@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, json
 from pygame.locals import *
 
 from .GUI_button import *
@@ -7,7 +7,7 @@ from .GUI_form import *
 from .GUI_label import *
 from .GUI_slider import *
 from .GUI_widget import *
-from ._GUI_modal_score import *
+from ._GUI_modales import *
 from .ajustes import *
 
 
@@ -43,28 +43,11 @@ class FormFinal(Form):
         # img = pygame.image.load('Dragon_Ball\\resources\GUI\Menu_opciones.png').convert_alpha()
         # self.img = pygame.transform.scale(img, (w, h))
         
-        
-        # self.btn_salir = Button_Image(
-        #     self._slave,
-        #     x,
-        #     y,
-        #     183,
-        #     490,
-        #     LARGO_BOTON*0.7,
-        #     ALTURA_BOTON*0.7,
-        #     "Dragon_Ball\\resources\GUI\\botones\Defined\salir.png",# -> LE PUEDO PONER CUALQUIER IMAGEN
-        #     self.btn_salir_click,
-        #     "a"
-        # )
 
-        # self.lista_widgets.append(self.btn_salir)
-        # # self.lista_widgets.append(self.btn_tabla)
-        
-
-    def inicializar(self):
-        dict_score = [
-            {"Jugador": "Pepe", "Tiempo": self.tiempo_jugador},
-        ]
+    def inicializar(self, nivel):
+        dict_score = leer_puntaje(nivel)
+        dict_score = dict_score['Jugadores']
+        self.menu_principal = False
         form_score = Modal(
             self._master,
             self._x,
@@ -98,9 +81,14 @@ class FormFinal(Form):
                 self.draw()
                 for widget in self.lista_widgets:
                     widget.update(lista_eventos)
-                # self.set_volumen(lista_eventos) -> TODO
         else:
             self.hijo.update(lista_eventos)
         return self.menu_principal
 
-
+def leer_puntaje(nivel):
+    try:
+        with open(f'Dragon_Ball/{nivel}_data.json') as archivo:
+            data = json.load(archivo)
+        return data
+    except:
+        return None

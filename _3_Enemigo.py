@@ -5,6 +5,7 @@ from ajustes import *
 from cargar_imagenes import *
 from _2_Personaje import Personaje
 from _3_Proyectil import Proyectil
+from config import *
 
 
 
@@ -15,7 +16,7 @@ class Enemigo(Personaje):
             self.tipo = tipo
 
             self.direccion.x = 0
-            self.gravedad = GRAVEDAD
+            self.gravedad = GRAVEDAD_CAIDA
             
             self.dispara = False
             self.tiempo_disparar = 0
@@ -23,8 +24,6 @@ class Enemigo(Personaje):
             self.disparos_rafaga = 0
             self.proyectiles = pygame.sprite.Group()
             
-            self.enemy_shoot_sound = pygame.mixer.Sound('Dragon_Ball\\resources\sounds\\laser4.wav')
-            self.enemy_shoot_sound.set_volume(0.05)
             
             # Muerte
             self.velocidad_animacion_muerte = VELOCIDAD_ANIMACION_MUERTE_ENEMIGOS
@@ -44,6 +43,8 @@ class Enemigo(Personaje):
             self.image = self.frames[0]
             self.rect = self.image.get_rect(topleft=pos)
             self.velocidad_animacion = VELOCIDAD_ANIMACION_Y_DISPARO_JEFE
+            
+            self.is_killed = False
             
             # disparo ---
             self.rayo_cargando = pygame.image.load('Dragon_Ball\\resources\\final_boss\\4.png')
@@ -135,7 +136,7 @@ class Enemigo(Personaje):
         x = self.rect.centerx + (self.rect.w * 0.5) * sentido
         y = self.rect.y + 14
         
-        self.enemy_shoot_sound.play()
+        enemy_shoot_sound.play()
         
         path = 'Dragon_Ball\\resources\enemigos\Destroyer\proyectil\\0.png'
         disparo = Proyectil((x, y), path, VELOCIDAD_PROYECTIL_ENEMIGO, sentido, self.ataque)

@@ -11,6 +11,7 @@ class Plataforma(Objeto):
         if self.visible:
             pantalla.blit(self.image, self.rect.topleft)
 
+
 class Hongo(Plataforma):
     def __init__(self, pos, tamaño, imagen, tipo):
         super().__init__(pos, tamaño, imagen)

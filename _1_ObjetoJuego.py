@@ -17,7 +17,7 @@ class Objeto(pygame.sprite.Sprite):
                 self.image = load(imagen).convert_alpha()
             except:
                 self.image = pygame.Surface(tamaño)
-                self.image.fill('red')
+                self.image.fill((209,170,157))
         
         self.rect = self.image.get_rect(topleft = pos)
         self.pos = pos

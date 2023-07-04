@@ -7,7 +7,8 @@ from .GUI_form import *
 from .GUI_label import *
 from .GUI_slider import *
 from .GUI_widget import *
-from ._GUI_modal_score import *
+from ._GUI_modales import *
+from ._GUI_form_final import leer_puntaje
 from .ajustes import *
 
 
@@ -44,6 +45,7 @@ class FormPrincipal(Form):
         self.flag_cambio_nivel = False
 
         self.volumen = 0.1
+        self.volumen_anterior = self.volumen
         self.flag_play = True
 
         pygame.mixer.init()
@@ -106,7 +108,8 @@ class FormPrincipal(Form):
             "white",
             True,
             'Dragon_Ball\\resources\GUI\menu_general.png',
-            funcion = self.set_lvl_actual
+            funcion = self.set_lvl_actual,
+            volumen = self.volumen
         )
 
         self.show_dialog(niveles_menu)#-> Muestra un formulario y desaparece el otro
@@ -124,7 +127,8 @@ class FormPrincipal(Form):
             True,
             opciones = 'Dragon_Ball\\resources\GUI\Menu_opciones.png',
             func_opc = self.funcion_opciones,
-            flag_play = self.flag_play
+            flag_play = self.flag_play,
+            volumen = self.volumen
         )
 
         self.show_dialog(opciones_menu)#-> Muestra un formulario y desaparece el otro
@@ -140,7 +144,6 @@ class FormPrincipal(Form):
                 self.render()
                 for widget in self.lista_widgets:
                     widget.update(lista_eventos)
-                # self.set_volumen(lista_eventos) -> TODO
         else:
             self.hijo.update(lista_eventos)
         
@@ -149,15 +152,28 @@ class FormPrincipal(Form):
             return self.lvl_actual
 
     def set_lvl_actual(self, numero : int):
-        self.lvl_actual = numero
-        self.flag_cambio_nivel = True
+        # if numero == 1:
+        #     if leer_puntaje(f'nivel_1'):
+        #         self.lvl_actual = numero
+        #         self.flag_cambio_nivel = True
+        #     else:
+        #         print('Completar el nivel 1 primero')
+        # elif numero == 2:
+        #     if leer_puntaje(f'nivel_1') and leer_puntaje(f'nivel_2'):
+        #         self.lvl_actual = numero
+        #         self.flag_cambio_nivel = True
+        #     else:
+        #         print('Completar los niveles 1 y 2 primero')
+        # elif numero == 0:
+            self.lvl_actual = numero
+            self.flag_cambio_nivel = True
     
     def funcion_opciones(self, cambios_v, cambios_m, musica, vm, efectos, ve):
         if cambios_m:
             if not musica:
-                self.bg_music.stop()
+                self.bg_music.set_volume(0)
             else:
-                self.bg_music.play(-1)
+                self.bg_music.set_volume(self.volumen)
             self.flag_play = not self.flag_play
         elif cambios_v:
             self.volumen = vm
