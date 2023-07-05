@@ -11,158 +11,191 @@ from _3_Recompensa import Recompensa
 from _3_Trampa import Mar, Trampa, TrampaLaser
 from importar_niveles import importar_csv_layout
 from cargar_imagenes import cargar_terreno, cargar_imagenes_carpeta
-from config import *
+from GUI.config import *
 
 
 class Nivel:
-    def __init__(self, data_nivel, pantalla, nivel_2 = False, nivel_3 = False):
+    def __init__(self, data_nivel, pantalla, nivel_2=False, nivel_3=False):
         self.pantalla = pantalla
         self.modo = False
         self.running = True
-        
-        #---------- LVL FINAL ---------------
+
+        # ---------- LVL FINAL ---------------
         if nivel_3:
             self.flag_entrada = True
             self.flag_spawnear_enemigos = False
             self.flag_invencibilidad = False
-            
+
             self.tiempo_invencibilidad = 0
-            
+
             self.jefe_setup()
-            
-            self.puerta_cerrada = Plataforma((-5,-5),(1,1), None, False)
-            
+
+            self.puerta_cerrada = Plataforma((-5, -5), (1, 1), None, False)
+
             self.tiempo_spawn_enemigos_disparan = 0
             self.tiempo_spawn_enemigos_capa = 0
-            
+
             self.x_spawn_disparan = None
             self.y_spawn_disparan_arriba = TILE_SIZE
             self.y_spawn_disparan_abajo = 4 * TILE_SIZE
-            
-            self.x_y_cerrar = (TILE_SIZE*3, 8 * TILE_SIZE)
-        
-        #---------- --------- ---------------
-        
-        
+
+            self.x_y_cerrar = (TILE_SIZE * 3, 8 * TILE_SIZE)
+
+        # ---------- --------- ---------------
+
         self.is_nivel_2 = nivel_2
         self.is_lvl_3 = nivel_3
-        
-        self.tiempo_anterior = 0
+
+        self.tiempo_anterior = 60
         self.desplazamiento_mundo = 0
         self.tiempo = 0
         self.tiempo_salto = 0
-        
+
+        self.cronometro = 60
+
         bg_audio_game.play(-1)
-        
+
         # texto
-        self.font = pygame.font.Font('freesansbold.ttf', 32)
-        self.texto_blit = self.font.render('0', False, 'black')
+        self.font = pygame.font.Font("freesansbold.ttf", 32)
+        self.texto_blit = self.font.render("0", False, "black")
         self.bg_rect = pygame.Rect(575, 3, 60, 40)
         self.bg_rect_2 = pygame.Rect(575, 3, 60, 40)
-        
+
         # INTERFAZ MENUS
         self.menu_victoria = False
-        
-        
+
         # CONFIGURACION IMPORTAR NIVELES
-        
+
         # jugador
-        jugador_layout = importar_csv_layout(data_nivel['jugador'])
+        jugador_layout = importar_csv_layout(data_nivel["jugador"])
         self.jugador = pygame.sprite.GroupSingle()
         self.final = pygame.sprite.GroupSingle()
         self.configurar_jugador(jugador_layout)
-        
+
         # items
-        items_layout = importar_csv_layout(data_nivel['items'])
-        self.sprites_items = self.crear_grupo_sprites(items_layout, 'items')
-        
+        items_layout = importar_csv_layout(data_nivel["items"])
+        self.sprites_items = self.crear_grupo_sprites(items_layout, "items")
+
         # hongos fg
-        fg_hongos_layout = importar_csv_layout(data_nivel['fg_hongos'])
-        self.sprites_fg_hongos = self.crear_grupo_sprites(fg_hongos_layout, 'fg_hongos')
-        
+        fg_hongos_layout = importar_csv_layout(data_nivel["fg_hongos"])
+        self.sprites_fg_hongos = self.crear_grupo_sprites(
+            fg_hongos_layout, "fg_hongos"
+        )
+
         # pinchos
-        pinchos_layout = importar_csv_layout(data_nivel['pinchos'])
-        self.sprites_pinchos = self.crear_grupo_sprites(pinchos_layout, 'pinchos')
-        
+        pinchos_layout = importar_csv_layout(data_nivel["pinchos"])
+        self.sprites_pinchos = self.crear_grupo_sprites(
+            pinchos_layout, "pinchos"
+        )
+
         # restriccion enemigos
-        restricciones_layout = importar_csv_layout(data_nivel['restricciones'])
-        self.sprites_restricciones = self.crear_grupo_sprites(restricciones_layout, 'restricciones')
-        
+        restricciones_layout = importar_csv_layout(data_nivel["restricciones"])
+        self.sprites_restricciones = self.crear_grupo_sprites(
+            restricciones_layout, "restricciones"
+        )
+
         # enemigos
-        enemigos_layout = importar_csv_layout(data_nivel['enemigos'])
-        self.sprites_enemigos = self.crear_grupo_sprites(enemigos_layout, 'enemigos')
-        
+        enemigos_layout = importar_csv_layout(data_nivel["enemigos"])
+        self.sprites_enemigos = self.crear_grupo_sprites(
+            enemigos_layout, "enemigos"
+        )
+
         # pasto
-        pasto_layout = importar_csv_layout(data_nivel['pasto'])
-        self.sprites_pasto = self.crear_grupo_sprites(pasto_layout, 'pasto')
-        
+        pasto_layout = importar_csv_layout(data_nivel["pasto"])
+        self.sprites_pasto = self.crear_grupo_sprites(pasto_layout, "pasto")
+
         # cajas
-        cajas_layout = importar_csv_layout(data_nivel['cajas'])
-        self.sprites_cajas = self.crear_grupo_sprites(cajas_layout, 'cajas')
-        
+        cajas_layout = importar_csv_layout(data_nivel["cajas"])
+        self.sprites_cajas = self.crear_grupo_sprites(cajas_layout, "cajas")
+
         # terreno
-        terreno_layout = importar_csv_layout(data_nivel['terreno'])
-        self.sprites_terreno = self.crear_grupo_sprites(terreno_layout, 'terreno')
-        
+        terreno_layout = importar_csv_layout(data_nivel["terreno"])
+        self.sprites_terreno = self.crear_grupo_sprites(
+            terreno_layout, "terreno"
+        )
+
         # hongos bg
-        bg_hongos_layout = importar_csv_layout(data_nivel['bg_hongos'])
-        self.sprites_bg_hongos = self.crear_grupo_sprites(bg_hongos_layout, 'bg_hongos')
-        
+        bg_hongos_layout = importar_csv_layout(data_nivel["bg_hongos"])
+        self.sprites_bg_hongos = self.crear_grupo_sprites(
+            bg_hongos_layout, "bg_hongos"
+        )
+
         # fondo cueva
-        fondo_cueva_layout = importar_csv_layout(data_nivel['fondo_cueva'])
-        self.sprites_fondo_cueva = self.crear_grupo_sprites(fondo_cueva_layout, 'fondo_cueva')
-        
+        fondo_cueva_layout = importar_csv_layout(data_nivel["fondo_cueva"])
+        self.sprites_fondo_cueva = self.crear_grupo_sprites(
+            fondo_cueva_layout, "fondo_cueva"
+        )
+
         if nivel_3:
             for pincho in self.sprites_pinchos:
                 self.pincho_rect = pincho.rect
-        
+
         if not self.is_nivel_2:
             # mar
             largo = len(terreno_layout[0]) * TILE_SIZE
-            self.mar = Mar((0,SCREEN_HEIGHT - 40), 'Dragon_Ball\\niveles\\niveles\graficos\\terreno\\agua', largo)
-            
+            self.mar = Mar(
+                (0, SCREEN_HEIGHT - 40),
+                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\agua",
+                largo,
+            )
+
             # cielo
             self.cielo = Cielo(4)
         else:
             # Trampa laser
-            trampa_laser_layout = importar_csv_layout(data_nivel['trampa_laser'])
-            self.sprites_trampa_laser = self.crear_grupo_sprites(trampa_laser_layout, 'trampa_laser')
-        
+            trampa_laser_layout = importar_csv_layout(
+                data_nivel["trampa_laser"]
+            )
+            self.sprites_trampa_laser = self.crear_grupo_sprites(
+                trampa_laser_layout, "trampa_laser"
+            )
+
         # nubes
-        nubes_layout = importar_csv_layout(data_nivel['nubes'])
-        self.sprites_nubes = self.crear_grupo_sprites(nubes_layout, 'nubes')
-        
-    #---------- LVL FINAL ---------------
-    
+        nubes_layout = importar_csv_layout(data_nivel["nubes"])
+        self.sprites_nubes = self.crear_grupo_sprites(nubes_layout, "nubes")
+
+    # ---------- LVL FINAL ---------------
+
     def jefe_setup(self):
         x = 46 * TILE_SIZE
         y = -23
-        self.jefe = Enemigo(3, (x,y), VIDA_JEFE, 2, 0, True)
-    
+        self.jefe = Enemigo(3, (x, y), VIDA_JEFE, 2, 0, True)
+
     def checkear_entrada_zona_jefe(self):
         if self.flag_entrada:
-            entro = pygame.sprite.spritecollide(self.jugador.sprite, self.sprites_restricciones, False)
+            entro = pygame.sprite.spritecollide(
+                self.jugador.sprite, self.sprites_restricciones, False
+            )
             if entro:
                 self.x_spawn_disparan
                 self.cerrar_entrada()
                 self.flag_spawnear_enemigos = True
                 self.flag_entrada = False
-    
+
     def spawnear_enemigos(self, dt):
         self.x_spawn_disparan = self.pincho_rect.x
-        # print(f'pincho:{self.pincho_rect.x}')
-        # print(f'jugador:{self.jugador.sprite.rect.x}')
-        # print(f'resultado:{self.x_spawn_disparan}')
-        
+
         self.tiempo_spawn_enemigos_disparan += dt
         if self.tiempo_spawn_enemigos_disparan > VELOCIDAD_SPAWN_DISPARAN:
             self.tiempo_spawn_enemigos_disparan = 0
-            enemigo = Enemigo(VELOCIDAD_ENEMIGOS, (self.x_spawn_disparan,self.y_spawn_disparan_arriba), 2, 1, 0)
+            enemigo = Enemigo(
+                VELOCIDAD_ENEMIGOS,
+                (self.x_spawn_disparan, self.y_spawn_disparan_arriba),
+                2,
+                1,
+                0,
+            )
             self.sprites_enemigos.add(enemigo)
-            
-            enemigo = Enemigo(VELOCIDAD_ENEMIGOS, (self.x_spawn_disparan,self.y_spawn_disparan_abajo), 2, 1, 0)
+
+            enemigo = Enemigo(
+                VELOCIDAD_ENEMIGOS,
+                (self.x_spawn_disparan, self.y_spawn_disparan_abajo),
+                2,
+                1,
+                0,
+            )
             self.sprites_enemigos.add(enemigo)
-        
+
         self.tiempo_spawn_enemigos_capa += dt
         if self.tiempo_spawn_enemigos_capa > VELOCIDAD_SPAWN_CAPA:
             self.tiempo_spawn_enemigos_capa = 0
@@ -178,105 +211,167 @@ class Nivel:
             enemigo_capa = Enemigo(VELOCIDAD_ENEMIGOS, (x, 0), 2, 1, 2)
             enemigo_capa.direccion.x = -1
             self.sprites_enemigos.add(enemigo_capa)
-    
+
     def cerrar_entrada(self):
-        self.puerta_cerrada = Plataforma(self.x_y_cerrar, (64,64), None, False)
+        self.puerta_cerrada = Plataforma(
+            self.x_y_cerrar, (64, 64), None, False
+        )
         self.sprites_terreno.add(self.puerta_cerrada)
-    
-    #---------- --------- ---------------
 
+    # ---------- --------- ---------------
 
-    def crear_grupo_sprites(self,layout,tipo):
+    def crear_grupo_sprites(self, layout, tipo):
         grupo = pygame.sprite.Group()
 
-        for i, fila in enumerate(layout): # -> cada fila [-1,-1,0,...]
-            for j, valor in enumerate(fila): # -> cada valor de cada fila '-1' ... '0'
-                if valor != '-1':
-                    x = j * TILE_SIZE # -> la cantidad de columnas de la fila * tamaño tile
+        for i, fila in enumerate(layout):  # -> cada fila [-1,-1,0,...]
+            for j, valor in enumerate(
+                fila
+            ):  # -> cada valor de cada fila '-1' ... '0'
+                if valor != "-1":
+                    x = (
+                        j * TILE_SIZE
+                    )  # -> la cantidad de columnas de la fila * tamaño tile
                     y = i * TILE_SIZE
-                    
-                    sprite = ''
+
+                    sprite = ""
                     match tipo:
-                        case 'terreno':
-                            terrenos = cargar_terreno('Dragon_Ball\\niveles\\niveles\graficos\\terreno\\terrain_tiles.png')
+                        case "terreno":
+                            terrenos = cargar_terreno(
+                                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\terrain_tiles.png"
+                            )
                             terreno = terrenos[int(valor)]
-                            sprite = Plataforma((x,y), (TILE_SIZE, TILE_SIZE), terreno)
-                        case 'pasto':
-                            pastos = cargar_terreno('Dragon_Ball\\niveles\\niveles\graficos\\terreno\\grass.png')
+                            sprite = Plataforma(
+                                (x, y), (TILE_SIZE, TILE_SIZE), terreno
+                            )
+                        case "pasto":
+                            pastos = cargar_terreno(
+                                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\grass.png"
+                            )
                             pasto = pastos[int(valor)]
-                            sprite = Plataforma((x,y), (TILE_SIZE, TILE_SIZE), pasto)
-                        case 'cajas':
-                            path = 'Dragon_Ball\\niveles\\niveles\graficos\\terreno\crate.png'
-                            sprite = Plataforma((x,y), (TILE_SIZE, TILE_SIZE), path)
+                            sprite = Plataforma(
+                                (x, y), (TILE_SIZE, TILE_SIZE), pasto
+                            )
+                        case "cajas":
+                            path = "Dragon_Ball\\niveles\\niveles\graficos\\terreno\crate.png"
+                            sprite = Plataforma(
+                                (x, y), (TILE_SIZE, TILE_SIZE), path
+                            )
                             sprite.rect.bottomleft = (x, y + TILE_SIZE)
-                        case 'items':
-                            sprite = Recompensa((x,y), 'Dragon_Ball\\niveles\\niveles\graficos\items\semilla')
-                        case 'fg_hongos':
-                            path = 'Dragon_Ball\\niveles\\niveles\graficos\\terreno\hongos'
+                        case "items":
+                            sprite = Recompensa(
+                                (x, y),
+                                "Dragon_Ball\\niveles\\niveles\graficos\items\semilla",
+                            )
+                        case "fg_hongos":
+                            path = "Dragon_Ball\\niveles\\niveles\graficos\\terreno\hongos"
                             hongos = cargar_imagenes_carpeta(path)
                             tipo_hongo = int(valor) - 9
                             hongo = hongos[tipo_hongo]
-                            sprite = Hongo((x,y), (TILE_SIZE, TILE_SIZE), hongo, tipo_hongo)
-                        case 'bg_hongos':
-                            path = 'Dragon_Ball\\niveles\\niveles\graficos\\terreno\hongos'
+                            sprite = Hongo(
+                                (x, y),
+                                (TILE_SIZE, TILE_SIZE),
+                                hongo,
+                                tipo_hongo,
+                            )
+                        case "bg_hongos":
+                            path = "Dragon_Ball\\niveles\\niveles\graficos\\terreno\hongos"
                             hongos = cargar_imagenes_carpeta(path)
                             tipo_hongo = int(valor) - 9
                             hongo = hongos[tipo_hongo]
-                            sprite = Hongo((x,y), (TILE_SIZE, TILE_SIZE), hongo, tipo_hongo)
-                        case 'enemigos':
+                            sprite = Hongo(
+                                (x, y),
+                                (TILE_SIZE, TILE_SIZE),
+                                hongo,
+                                tipo_hongo,
+                            )
+                        case "enemigos":
                             tipo_robot = int(valor) - 2
-                            sprite = Enemigo(VELOCIDAD_ENEMIGOS, (x, y), VIDA_BASE_ENEMIGOS, 1, tipo_robot)
-                        case 'restricciones':
-                            sprite = Plataforma((x,y), (TILE_SIZE, TILE_SIZE), None, False)
-                        case 'nubes':
-                            path = 'Dragon_Ball\\niveles\\niveles\graficos\\terreno\\nubes'
+                            sprite = Enemigo(
+                                VELOCIDAD_ENEMIGOS,
+                                (x, y),
+                                VIDA_BASE_ENEMIGOS,
+                                1,
+                                tipo_robot,
+                            )
+                        case "restricciones":
+                            sprite = Plataforma(
+                                (x, y), (TILE_SIZE, TILE_SIZE), None, False
+                            )
+                        case "nubes":
+                            path = "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\nubes"
                             nubes = cargar_imagenes_carpeta(path)
                             nube = nubes[int(valor)]
                             sprite = Objeto((x, y), imagen=nube)
-                        case 'fondo_cueva':
-                            terrenos = cargar_terreno('Dragon_Ball\\niveles\\niveles\graficos\\terreno\\terrain_tiles.png')
+                        case "fondo_cueva":
+                            terrenos = cargar_terreno(
+                                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\terrain_tiles.png"
+                            )
                             terreno = terrenos[int(valor)]
-                            sprite = Plataforma((x,y), (TILE_SIZE, TILE_SIZE), terreno)
-                        case 'pinchos':
-                            sprite = Trampa((x,y), 'Dragon_Ball\\resources\enemigos\spikes.png', 5)
-                        case 'trampa_laser':
-                            sprite = TrampaLaser((x,y), 'Dragon_Ball\\resources\enemigos\\trampa_laser\\0.png', 2)
-                            sprite.rect.midbottom = (x + TILE_SIZE/2, y + TILE_SIZE)
-                        
-                    grupo.add(sprite)
-                    
-        return grupo
+                            sprite = Plataforma(
+                                (x, y), (TILE_SIZE, TILE_SIZE), terreno
+                            )
+                        case "pinchos":
+                            sprite = Trampa(
+                                (x, y),
+                                "Dragon_Ball\\resources\enemigos\spikes.png",
+                                5,
+                            )
+                        case "trampa_laser":
+                            sprite = TrampaLaser(
+                                (x, y),
+                                "Dragon_Ball\\resources\enemigos\\trampa_laser\\0.png",
+                                2,
+                            )
+                            sprite.rect.midbottom = (
+                                x + TILE_SIZE / 2,
+                                y + TILE_SIZE,
+                            )
 
+                    grupo.add(sprite)
+
+        return grupo
 
     def configurar_jugador(self, layout):
         for i, fila in enumerate(layout):
             for j, valor in enumerate(fila):
                 x = j * TILE_SIZE
                 y = i * TILE_SIZE
-                if valor == '0':
-                    sprite = Jugador(self.pantalla ,POTENCIA_SALTO, VELOCIDAD_JUGADOR, VIDA_BASE_JUGADOR, ATAQUE_BASE_JUGADOR, (x, y),)
+                if valor == "0":
+                    sprite = Jugador(
+                        self.pantalla,
+                        POTENCIA_SALTO,
+                        VELOCIDAD_JUGADOR,
+                        VIDA_BASE_JUGADOR,
+                        ATAQUE_BASE_JUGADOR,
+                        (x, y),
+                    )
                     self.jugador.add(sprite)
-                elif valor == '1':
-                    sprite = Item((x,y), 'Dragon_Ball\\resources\meta\\bola de dragon.png')
+                elif valor == "1":
+                    sprite = Item(
+                        (x, y),
+                        "Dragon_Ball\\resources\meta\\bola de dragon.png",
+                    )
                     self.final.add(sprite)
-    
-    
+
     def colision_enemigos_restriccion(self, dt):
         for enemigo in self.sprites_enemigos:
-            if pygame.sprite.spritecollide(enemigo, self.sprites_restricciones, False):
+            if pygame.sprite.spritecollide(
+                enemigo, self.sprites_restricciones, False
+            ):
                 enemigo.cambiar_sentido()
 
-    
     def desplazar_x(self, dt):
-        jugador = self.jugador.sprite # -> obtengo el objeto del grupo
+        jugador = self.jugador.sprite  # -> obtengo el objeto del grupo
         jugador_x = jugador.rect.centerx
         margen_izquierda = SCREEN_WIDTH / 4
         if not self.is_lvl_3:
             margen_derecha = SCREEN_WIDTH - margen_izquierda * 2
         else:
             margen_derecha = SCREEN_WIDTH - margen_izquierda * 3
-        
-        if jugador_x < margen_izquierda and jugador.direccion.x < 0: #-> esta yendo pa la izquierda
+
+        if (
+            jugador_x < margen_izquierda and jugador.direccion.x < 0
+        ):  # -> esta yendo pa la izquierda
             self.desplazamiento_mundo = VELOCIDAD_JUGADOR * dt
             jugador.velocidad = 0
         elif jugador_x > margen_derecha and jugador.direccion.x > 0:
@@ -285,7 +380,7 @@ class Nivel:
         else:
             self.desplazamiento_mundo = 0
             jugador.velocidad = VELOCIDAD_JUGADOR
-    
+
     def get_input(self, dt, eventos):
         global transformacion_sound
         jugador = self.jugador.sprite
@@ -296,7 +391,13 @@ class Nivel:
                     self.modo = not self.modo
                 if evento.key == pygame.K_f and jugador.vida > 0:
                     jugador.disparar()
-                elif evento.key == pygame.K_d and jugador.vida > 0 and jugador.ssj_count == UMBRAL_SSJ and not jugador.esta_ssj and not jugador.transformandose:
+                elif (
+                    evento.key == pygame.K_d
+                    and jugador.vida > 0
+                    and jugador.ssj_count == UMBRAL_SSJ
+                    and not jugador.esta_ssj
+                    and not jugador.transformandose
+                ):
                     jugador.transformandose = True
                     transformacion_sound.play()
                     jugador.frame_index = 0
@@ -309,48 +410,64 @@ class Nivel:
                     jugador.esta_saltando = True
                     jugador.en_piso = False
                     jugador.saltar(dt)
-                elif not jugador.tirar_gd and evento.key == pygame.K_s and jugador.vida > 0 and jugador.gd_counter >= UMBRAL_GENKI_DAMA:
+                elif (
+                    not jugador.tirar_gd
+                    and evento.key == pygame.K_s
+                    and jugador.vida > 0
+                    and jugador.gd_counter >= UMBRAL_GENKI_DAMA
+                ):
                     jugador.tirar_gd = True
                 elif evento.key == pygame.K_COMMA and jugador:
                     jugador.god_mode = not jugador.god_mode
             if jugador and evento.type == pygame.KEYUP:
                 if evento.key == pygame.K_SPACE:
                     jugador.esta_saltando = False
-    
+
     def draw_all(self, dt):
         jugador = self.jugador.sprite
-        
+
         if not self.is_nivel_2:
             # cielo
             self.cielo.draw(self.pantalla)
-            
+
             # nubes
             self.sprites_nubes.update(self.desplazamiento_mundo)
             self.sprites_nubes.draw(self.pantalla)
-            
+
             # fondo cueva
             self.sprites_fondo_cueva.update(self.desplazamiento_mundo)
             self.sprites_fondo_cueva.draw(self.pantalla)
         else:
-            self.pantalla.fill((52,52,62))
-        
-        
+            self.pantalla.fill((52, 52, 62))
+
         # hongos bg
         self.sprites_bg_hongos.update(self.desplazamiento_mundo)
         self.sprites_bg_hongos.draw(self.pantalla)
-        
+
         # cajas
         self.sprites_cajas.update(self.desplazamiento_mundo)
         self.sprites_cajas.draw(self.pantalla)
-        
+
         # enemigos
         vec_jugador = pygame.Vector2(jugador.rect.x, jugador.rect.y)
-        
-        objetos_colisionables_enemigo = self.sprites_terreno.sprites() + self.sprites_restricciones.sprites()
-        self.sprites_enemigos.update(dt, self.pantalla, self.desplazamiento_mundo, self.tiempo, objetos_colisionables_enemigo, vec_jugador, self.jugador, self.sprites_terreno)
+
+        objetos_colisionables_enemigo = (
+            self.sprites_terreno.sprites()
+            + self.sprites_restricciones.sprites()
+        )
+        self.sprites_enemigos.update(
+            dt,
+            self.pantalla,
+            self.desplazamiento_mundo,
+            self.tiempo,
+            objetos_colisionables_enemigo,
+            vec_jugador,
+            self.jugador,
+            self.sprites_terreno,
+        )
         self.sprites_enemigos.draw(self.pantalla)
 
-        #pinchos
+        # pinchos
         self.sprites_pinchos.update(self.desplazamiento_mundo)
         self.sprites_pinchos.draw(self.pantalla)
 
@@ -360,24 +477,22 @@ class Nivel:
         else:
             self.sprites_trampa_laser.update(self.desplazamiento_mundo, dt)
             self.sprites_trampa_laser.draw(self.pantalla)
-            
-        
+
         # Tierra
         self.sprites_terreno.update(self.desplazamiento_mundo)
         self.sprites_terreno.draw(self.pantalla)
-        
+
         # pasto
         self.sprites_pasto.update(self.desplazamiento_mundo)
         self.sprites_pasto.draw(self.pantalla)
-        
+
         # restriccion enemigos
         self.sprites_restricciones.update(self.desplazamiento_mundo)
 
-        
         # hongos fg
         self.sprites_fg_hongos.update(self.desplazamiento_mundo)
         self.sprites_fg_hongos.draw(self.pantalla)
-        
+
         # items
         self.sprites_items.update(dt, self.desplazamiento_mundo)
         self.sprites_items.draw(self.pantalla)
@@ -386,69 +501,96 @@ class Nivel:
         self.final.draw(self.pantalla)
         self.jugador.update(dt, self.pantalla, self.desplazamiento_mundo)
         self.jugador.draw(self.pantalla)
-    
+
     def colisiones(self, dt):
         jugador = self.jugador.sprite
-        
-        objetos_colisionables = self.sprites_terreno.sprites() + self.sprites_fg_hongos.sprites()
-        
+
+        objetos_colisionables = (
+            self.sprites_terreno.sprites() + self.sprites_fg_hongos.sprites()
+        )
+
         # jugador
         jugador.colisiones_horizontales(objetos_colisionables, dt)
         jugador.colisiones_verticales(objetos_colisionables, dt)
-        
+
         jugador.verificar_colision_enemigos(self.sprites_enemigos)
         jugador.verificar_colision_trampas(self.sprites_pinchos)
         jugador.verificar_colision_items(self.sprites_items)
-        
+
         if not self.is_nivel_2:
-            jugador.verificar_colision_trampas(pygame.sprite.GroupSingle(self.mar))
+            jugador.verificar_colision_trampas(
+                pygame.sprite.GroupSingle(self.mar)
+            )
         else:
             jugador.verificar_colision_trampas(self.sprites_trampa_laser)
-            
+
         for proyectil in jugador.proyectiles:
-            colisiono = proyectil.verificar_objetivo(self.sprites_enemigos, self.sprites_terreno)
+            colisiono = proyectil.verificar_objetivo(
+                self.sprites_enemigos, self.sprites_terreno
+            )
             if colisiono:
                 jugador.ssj_count += 1
-                jugador.score += 10
-            
+                if jugador.esta_ssj:
+                    jugador.score += 10
+                else:
+                    jugador.score += 5
+
             if self.is_lvl_3:
-                headshot = proyectil.verificar_objetivo(self.jefe, self.sprites_terreno, True)
-                if headshot == 'headshot':
+                headshot = proyectil.verificar_objetivo(
+                    self.jefe, self.sprites_terreno, True
+                )
+                if headshot == "headshot":
+                    if jugador.esta_ssj:
+                        jugador.score += 10
+                    else:
+                        jugador.score += 5
                     self.jugador.sprite.gd_counter += 1
                     if self.jugador.sprite.gd_counter > UMBRAL_GENKI_DAMA:
                         self.jugador.sprite.gd_counter = UMBRAL_GENKI_DAMA
-                
-        
+
         if not self.menu_victoria:
             self.menu_victoria = jugador.verificar_colision_final(self.final)
-    
+
     def dibujar_tiempo(self):
-        if int(self.tiempo) > self.tiempo_anterior:
-            self.tiempo_anterior = int(self.tiempo)
+        if int(CRONOMETRO - self.tiempo) < self.tiempo_anterior:
+            self.cronometro = CRONOMETRO - self.tiempo
+
+            if self.cronometro <= 0:
+                self.reiniciar_nivel()
+
+            self.tiempo_anterior = int(self.cronometro)
             blit = str(self.tiempo_anterior)
-            self.texto_blit = self.font.render(blit, False, 'black')
-            
-        pygame.draw.rect(self.pantalla, 'grey', self.bg_rect, border_radius=8)
-        pygame.draw.rect(self.pantalla, 'black', self.bg_rect_2, 5, 8)
+            self.texto_blit = self.font.render(blit, False, "black")
+
+        pygame.draw.rect(self.pantalla, "grey", self.bg_rect, border_radius=8)
+        pygame.draw.rect(self.pantalla, "black", self.bg_rect_2, 5, 8)
         self.pantalla.blit(self.texto_blit, (586, 9))
-    
+
+    def reiniciar_nivel(self):
+        self.jugador.empty()
+
     def stop(self):
         self.running = False
         bg_audio_game.stop()
-    
+
+    def alternar_pausa(self):
+        self.running = not self.running
+
     def ejecutar_lvl_3(self, dt):
         if self.jugador.sprite:
-            #-- jefe --
+            # -- jefe --
             self.checkear_entrada_zona_jefe()
 
             if self.flag_spawnear_enemigos:
                 self.spawnear_enemigos(dt)
-            
+
             if not self.jefe.is_killed:
                 self.jefe.verificar_colision_jugador(self.jugador)
-            
+
             if not self.flag_invencibilidad:
-                jugador_herido = self.jefe.verificar_colision_rayo(self.jugador)
+                jugador_herido = self.jefe.verificar_colision_rayo(
+                    self.jugador
+                )
                 if jugador_herido:
                     self.flag_invencibilidad = not self.flag_invencibilidad
             else:
@@ -457,62 +599,89 @@ class Nivel:
                 if self.tiempo_invencibilidad > 1:
                     self.tiempo_invencibilidad = 0
                     self.flag_invencibilidad = False
-            
-            kill = self.jugador.sprite.gd.verificar_objetivo(self.jefe, self.sprites_terreno, True, True)
-            if kill == 'kill':
+
+            kill = self.jugador.sprite.gd.verificar_objetivo(
+                self.jefe, self.sprites_terreno, True, True
+            )
+            if kill == "kill":
                 self.flag_spawnear_enemigos = False
                 self.jefe.is_killed = True
-            
+
             if not self.jefe.is_killed:
-                self.jefe.update_jefe(dt, self.desplazamiento_mundo, self.pantalla)
+                self.jefe.update_jefe(
+                    dt, self.desplazamiento_mundo, self.pantalla
+                )
                 self.jefe.draw_jefe(self.pantalla)
-            #-- ---- --
-    
+            # -- ---- --
+
     def run(self, dt, eventos):
         if self.running:
             self.get_input(dt, eventos)
-            
+
             # camara
             self.desplazar_x(dt)
-            
+
             # Checkeo todo tipo de colisiones
             self.colisiones(dt)
-            
+
             # update and draw all the stuff
             self.draw_all(dt)
-            
+
             if self.is_lvl_3:
                 self.ejecutar_lvl_3(dt)
-                
-            
+
             self.tiempo += dt
             self.dibujar_tiempo()
-            
-            if self.modo and self.jugador:
+
+            self.debug()
+
+
+    def debug(self):
+        if self.modo and self.jugador:
                 jugador = self.jugador.sprite
-                
+
                 pygame.draw.rect(self.pantalla, (0, 0, 255), jugador.rect, 2)
-                
+
                 for enemigo in self.sprites_enemigos:
-                    pygame.draw.rect(self.pantalla, (255, 0, 0), enemigo.rect, 2)
+                    pygame.draw.rect(
+                        self.pantalla, (255, 0, 0), enemigo.rect, 2
+                    )
                 for item in self.sprites_items:
-                    pygame.draw.rect(self.pantalla, (0, 255, 255), item.rect, 2)
+                    pygame.draw.rect(
+                        self.pantalla, (0, 255, 255), item.rect, 2
+                    )
                 for proyectil in jugador.proyectiles:
-                    pygame.draw.rect(self.pantalla, (255, 255, 255), proyectil.rect, 2)
+                    pygame.draw.rect(
+                        self.pantalla, (255, 255, 255), proyectil.rect, 2
+                    )
                 for trampa in self.sprites_pinchos:
-                    pygame.draw.rect(self.pantalla, (255, 0, 0), trampa.rect, 2)
+                    pygame.draw.rect(
+                        self.pantalla, (255, 0, 0), trampa.rect, 2
+                    )
                 for enemigo in self.sprites_enemigos:
-                    pygame.draw.rect(self.pantalla, (255, 0, 0), enemigo.rect, 2)
+                    pygame.draw.rect(
+                        self.pantalla, (255, 0, 0), enemigo.rect, 2
+                    )
                 for hongo in self.sprites_fg_hongos:
                     pygame.draw.rect(self.pantalla, (0, 255, 0), hongo.rect, 2)
-                
+
                 if self.is_nivel_2:
                     for trampa in self.sprites_trampa_laser:
-                        pygame.draw.rect(self.pantalla, (255, 0, 0), trampa.rect, 2)
+                        pygame.draw.rect(
+                            self.pantalla, (255, 0, 0), trampa.rect, 2
+                        )
                 elif self.is_lvl_3:
                     if self.jefe:
-                        pygame.draw.rect(self.pantalla, (255, 0, 0), self.jefe.rect, 2)
-                        pygame.draw.rect(self.pantalla, (255, 0, 0), self.jefe.rayo_rect, 2)
-                        pygame.draw.rect(self.pantalla, (0, 255, 0), self.jefe.head_rect, 2)
+                        pygame.draw.rect(
+                            self.pantalla, (255, 0, 0), self.jefe.rect, 2
+                        )
+                        pygame.draw.rect(
+                            self.pantalla, (255, 0, 0), self.jefe.rayo_rect, 2
+                        )
+                        pygame.draw.rect(
+                            self.pantalla, (0, 255, 0), self.jefe.head_rect, 2
+                        )
                     if jugador.gd:
-                        pygame.draw.rect(self.pantalla, (0, 255, 0), jugador.gd.rect, 2)
+                        pygame.draw.rect(
+                            self.pantalla, (0, 255, 0), jugador.gd.rect, 2
+                        )

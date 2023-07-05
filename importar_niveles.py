@@ -8,5 +8,3 @@ def importar_csv_layout(path):
         for fila in nivel:
             mapa_layout.append(list(fila))
         return mapa_layout
-
-

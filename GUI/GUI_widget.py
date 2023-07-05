@@ -32,6 +32,3 @@ class Widget:
 
     def draw(self):
         self._master.blit(self._slave, self.slave_rect)
-        # pygame.draw.rect(
-        #     self._master, self._color_border, self.slave_rect, self.border_size
-        # )

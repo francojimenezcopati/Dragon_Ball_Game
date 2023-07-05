@@ -35,24 +35,22 @@ class FormInicio(Form):
             border_size,
             active,
         )
-        
-        
+
         self.tiempo_parpadeo = 0
-        
-        bg = pygame.image.load('Dragon_Ball\\resources\GUI\menu_start.png')
+
+        bg = pygame.image.load("Dragon_Ball\\resources\GUI\menu_start.png")
         self.bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        
-        self.play = pygame.image.load('Dragon_Ball\\resources\GUI\start.png')
+
+        self.play = pygame.image.load("Dragon_Ball\\resources\GUI\start.png")
         self.play = pygame.transform.scale2x(self.play)
-        
 
         self.render()
 
     def render(self):
-        self._slave.blit(self.bg, (0,0))
+        self._slave.blit(self.bg, (0, 0))
 
     def update(self, dt, eventos):
-        
+
         for event in eventos:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:

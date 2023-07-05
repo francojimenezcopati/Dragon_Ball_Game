@@ -7,11 +7,13 @@ from .GUI_form import *
 from .GUI_label import *
 from .GUI_slider import *
 from .GUI_widget import *
-from ._GUI_modales import Modal
+from ._GUI_modales import ModalBotones
 from .ajustes import *
+from .config import *
+from .utils import *
 
 
-class FormFinal(Form):
+class FormPausa(Form):
     def __init__(
         self,
         screen,
@@ -39,43 +41,66 @@ class FormFinal(Form):
         self.menu_principal = False
 
         self.tiempo_jugador = 1
+        
+        self.flag_play = True
+        self.flag_efectos = True
+        
+        self.volumen = 0.1
 
         # img = pygame.image.load('Dragon_Ball\\resources\GUI\Menu_opciones.png').convert_alpha()
         # self.img = pygame.transform.scale(img, (w, h))
 
-    def inicializar(self, nivel):
-        dict_score = leer_puntaje(nivel)
-        dict_score = dict_score["Jugadores"]
-        self.menu_principal = False
 
-        form_score = Modal(
+    def inicializar(self):
+        self.menu_principal = False
+        
+        opciones_menu = ModalBotones(
             self._master,
-            self._x,
-            self._y,
-            self._w,
-            self._h,
-            "purple",
+            300,
+            50,
+            WIDTH_OPCIONES,
+            HEIGHT_OPCIONES,
+            "white",
             "white",
             True,
-            "menu\API FORMS\Window.png",
-            dict_score,
-            100,
-            10,
-            10,
-            self.checkear_home,
+            opciones="Dragon_Ball\\resources\GUI\Menu_opciones.png",
+            func_opc=self.funcion_opciones,
+            flag_play=self.flag_play,
+            volumen=self.volumen,
+            pausa=True,
+            flag_efectos=self.flag_efectos,
+            checkear_home=self.checkear_home
         )
 
         self.show_dialog(
-            form_score
+            opciones_menu
         )  # -> Muestra un formulario y desaparece el otro
+        
+
+    def funcion_opciones(self, cambios_v, cambios_m, musica, vm, cambios_e, efectos):
+        global bg_audio_game
+        
+        if cambios_m:
+            if not musica:
+                bg_audio_game.set_volume(0)
+            else:
+                bg_audio_game.set_volume(self.volumen)
+            self.flag_play = not self.flag_play
+        elif cambios_v:
+            self.volumen = vm
+            bg_audio_game.set_volume(self.volumen)
+        
+        if cambios_e:
+            if efectos:
+                alternar_efectos_sonido(False)
+            else:
+                alternar_efectos_sonido(True)
+            self.flag_efectos = not self.flag_efectos
 
     def checkear_home(self, home):
         if home:
             self.menu_principal = True
 
-    def btn_salir_click(self, texto):
-        pygame.quit()
-        sys.exit()
 
     def update(self, lista_eventos):
         if self.verificar_dialog_result():  # -> si tengo un modal
@@ -86,12 +111,3 @@ class FormFinal(Form):
         else:
             self.hijo.update(lista_eventos)
         return self.menu_principal
-
-
-def leer_puntaje(nivel):
-    try:
-        with open(f"Dragon_Ball/{nivel}_data.json") as archivo:
-            data = json.load(archivo)
-        return data
-    except:
-        return None

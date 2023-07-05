@@ -36,10 +36,10 @@ class FormPrincipal(Form):
             border_size,
             active,
         )
-        
-        img = pygame.image.load('Dragon_Ball\\resources\GUI\menu_general.png')
+
+        img = pygame.image.load("Dragon_Ball\\resources\GUI\menu_general.png")
         self.img = pygame.transform.scale(img, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        
+
         self.lvl_actual = None
 
         self.flag_cambio_nivel = False
@@ -49,7 +49,9 @@ class FormPrincipal(Form):
         self.flag_play = True
 
         pygame.mixer.init()
-        self.bg_music = pygame.mixer.Sound("Dragon_Ball\\resources\GUI\musica\\bg_menu_music.mp3")
+        self.bg_music = pygame.mixer.Sound(
+            "Dragon_Ball\\resources\GUI\musica\\bg_menu_music.mp3"
+        )
         self.bg_music.set_volume(self.volumen)
         self.bg_music.play(-1)
 
@@ -61,7 +63,7 @@ class FormPrincipal(Form):
             150,
             LARGO_BOTON,
             ALTURA_BOTON,
-            "Dragon_Ball\\resources\GUI\\botones\Defined\\niveles.png",# -> LE PUEDO PONER CUALQUIER IMAGEN
+            "Dragon_Ball\\resources\GUI\\botones\Defined\\niveles.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
             self.btn_niveles_click,
             "a",
         )
@@ -70,24 +72,24 @@ class FormPrincipal(Form):
             x,
             y,
             CENTRAR_BOTON,
-            150+ESPACIO_ENTRE_BOTONES_Y,
+            150 + ESPACIO_ENTRE_BOTONES_Y,
             LARGO_BOTON,
             ALTURA_BOTON,
-            "Dragon_Ball\\resources\GUI\\botones\Defined\opciones.png",# -> LE PUEDO PONER CUALQUIER IMAGEN
+            "Dragon_Ball\\resources\GUI\\botones\Defined\opciones.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
             self.btn_opciones_click,
-            "a"
+            "a",
         )
         self.btn_salir = Button_Image(
             self._slave,
             x,
             y,
             CENTRAR_BOTON,
-            150+ESPACIO_ENTRE_BOTONES_Y*2,
+            150 + ESPACIO_ENTRE_BOTONES_Y * 2,
             LARGO_BOTON,
             ALTURA_BOTON,
-            "Dragon_Ball\\resources\GUI\\botones\Defined\salir.png",# -> LE PUEDO PONER CUALQUIER IMAGEN
+            "Dragon_Ball\\resources\GUI\\botones\Defined\salir.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
             self.btn_salir_click,
-            "a"
+            "a",
         )
 
         self.lista_widgets.append(self.btn_niveles)
@@ -97,7 +99,6 @@ class FormPrincipal(Form):
         self.render()
 
     def btn_niveles_click(self, texto):
-        
         niveles_menu = ModalBotones(
             self._master,
             0,
@@ -107,15 +108,16 @@ class FormPrincipal(Form):
             "white",
             "white",
             True,
-            'Dragon_Ball\\resources\GUI\menu_general.png',
-            funcion = self.set_lvl_actual,
-            volumen = self.volumen
+            "Dragon_Ball\\resources\GUI\menu_general.png",
+            funcion=self.set_lvl_actual,
+            volumen=self.volumen,
         )
 
-        self.show_dialog(niveles_menu)#-> Muestra un formulario y desaparece el otro
+        self.show_dialog(
+            niveles_menu
+        )  # -> Muestra un formulario y desaparece el otro
 
     def btn_opciones_click(self, texto):
-
         opciones_menu = ModalBotones(
             self._master,
             300,
@@ -125,20 +127,23 @@ class FormPrincipal(Form):
             "white",
             "white",
             True,
-            opciones = 'Dragon_Ball\\resources\GUI\Menu_opciones.png',
-            func_opc = self.funcion_opciones,
-            flag_play = self.flag_play,
-            volumen = self.volumen
+            opciones="Dragon_Ball\\resources\GUI\Menu_opciones.png",
+            func_opc=self.funcion_opciones,
+            flag_play=self.flag_play,
+            volumen=self.volumen,
         )
 
-        self.show_dialog(opciones_menu)#-> Muestra un formulario y desaparece el otro
+        self.show_dialog(
+            opciones_menu
+        )  # -> Muestra un formulario y desaparece el otro
 
     def btn_salir_click(self, texto):
         pygame.quit()
         sys.exit()
-    
+
+
     def update(self, lista_eventos):
-        if self.verificar_dialog_result(): #-> si tengo un modal
+        if self.verificar_dialog_result():  # -> si tengo un modal
             if self.active:
                 self.draw()
                 self.render()
@@ -146,28 +151,28 @@ class FormPrincipal(Form):
                     widget.update(lista_eventos)
         else:
             self.hijo.update(lista_eventos)
-        
+
         if self.flag_cambio_nivel:
             self.flag_cambio_nivel = False
             return self.lvl_actual
 
-    def set_lvl_actual(self, numero : int):
-        # if numero == 1:
-        #     if leer_puntaje(f'nivel_1'):
-        #         self.lvl_actual = numero
-        #         self.flag_cambio_nivel = True
-        #     else:
-        #         print('Completar el nivel 1 primero')
-        # elif numero == 2:
-        #     if leer_puntaje(f'nivel_1') and leer_puntaje(f'nivel_2'):
-        #         self.lvl_actual = numero
-        #         self.flag_cambio_nivel = True
-        #     else:
-        #         print('Completar los niveles 1 y 2 primero')
-        # elif numero == 0:
+    def set_lvl_actual(self, numero: int):
+        if numero == 1:
+            if leer_puntaje(f'nivel_1'):
+                self.lvl_actual = numero
+                self.flag_cambio_nivel = True
+            else:
+                print('Completar el nivel 1 primero')
+        elif numero == 2:
+            if leer_puntaje(f'nivel_1') and leer_puntaje(f'nivel_2'):
+                self.lvl_actual = numero
+                self.flag_cambio_nivel = True
+            else:
+                print('Completar los niveles 1 y 2 primero')
+        elif numero == 0:
             self.lvl_actual = numero
             self.flag_cambio_nivel = True
-    
+
     def funcion_opciones(self, cambios_v, cambios_m, musica, vm, efectos, ve):
         if cambios_m:
             if not musica:
@@ -180,7 +185,5 @@ class FormPrincipal(Form):
             self.bg_music.set_volume(self.volumen)
 
     def render(self):
-        self._slave.blit(self.img, (0,0))
+        self._slave.blit(self.img, (0, 0))
         # self._slave.fill(self._color_background)
-
-    

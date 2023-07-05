@@ -24,8 +24,10 @@ class Personaje(Objeto):
     # Colisiones
     def colisiones_verticales(self, plataformas, dt):
         self.aplicar_gravedad(dt)
-        
-        if self.velocidad == VELOCIDAD_JUGADOR and not self.god_mode: # si es el jugador
+
+        if (
+            self.velocidad == VELOCIDAD_JUGADOR and not self.god_mode
+        ):  # si es el jugador
             self.en_piso = False
         for plataforma in plataformas:
             if plataforma.rect.colliderect(self.rect):

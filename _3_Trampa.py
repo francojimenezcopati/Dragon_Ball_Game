@@ -20,14 +20,18 @@ class TrampaLaser(Trampa):
         super().__init__(pos, imagen, nivel_daño)
         self.tiempo_espera = 0
         self.tiempo_disparo = 0
-        self.imagen_df = pygame.image.load('Dragon_Ball\\resources\enemigos\\trampa_laser\\0.png')
-        self.imagen_laser = pygame.image.load('Dragon_Ball\\resources\enemigos\\trampa_laser\\1.png')
-    
+        self.imagen_df = pygame.image.load(
+            "Dragon_Ball\\resources\enemigos\\trampa_laser\\0.png"
+        )
+        self.imagen_laser = pygame.image.load(
+            "Dragon_Ball\\resources\enemigos\\trampa_laser\\1.png"
+        )
+
     def disparar(self):
         self.nivel_daño = 1
         self.image = self.imagen_laser
-        self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
-    
+        self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
+
     def update(self, desplazamiento_x, dt):
         self.tiempo_espera += dt
         if self.tiempo_espera > TIEMPO_LASER:
@@ -37,7 +41,7 @@ class TrampaLaser(Trampa):
             else:
                 self.nivel_daño = 0
                 self.image = self.imagen_df
-                self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+                self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
                 self.tiempo_disparo = 0
                 self.tiempo_espera = 0
         self.rect.x += round(desplazamiento_x)
