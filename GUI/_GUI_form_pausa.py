@@ -41,19 +41,18 @@ class FormPausa(Form):
         self.menu_principal = False
 
         self.tiempo_jugador = 1
-        
+
         self.flag_play = True
         self.flag_efectos = True
-        
+
         self.volumen = 0.1
 
         # img = pygame.image.load('Dragon_Ball\\resources\GUI\Menu_opciones.png').convert_alpha()
         # self.img = pygame.transform.scale(img, (w, h))
 
-
     def inicializar(self):
         self.menu_principal = False
-        
+
         opciones_menu = ModalBotones(
             self._master,
             300,
@@ -69,17 +68,18 @@ class FormPausa(Form):
             volumen=self.volumen,
             pausa=True,
             flag_efectos=self.flag_efectos,
-            checkear_home=self.checkear_home
+            checkear_home=self.checkear_home,
         )
 
         self.show_dialog(
             opciones_menu
         )  # -> Muestra un formulario y desaparece el otro
-        
 
-    def funcion_opciones(self, cambios_v, cambios_m, musica, vm, cambios_e, efectos):
+    def funcion_opciones(
+        self, cambios_v, cambios_m, musica, vm, cambios_e, efectos
+    ):
         global bg_audio_game
-        
+
         if cambios_m:
             if not musica:
                 bg_audio_game.set_volume(0)
@@ -89,7 +89,7 @@ class FormPausa(Form):
         elif cambios_v:
             self.volumen = vm
             bg_audio_game.set_volume(self.volumen)
-        
+
         if cambios_e:
             if efectos:
                 alternar_efectos_sonido(False)
@@ -100,7 +100,6 @@ class FormPausa(Form):
     def checkear_home(self, home):
         if home:
             self.menu_principal = True
-
 
     def update(self, lista_eventos):
         if self.verificar_dialog_result():  # -> si tengo un modal

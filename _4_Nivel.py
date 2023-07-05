@@ -635,53 +635,44 @@ class Nivel:
 
             self.debug()
 
-
     def debug(self):
         if self.modo and self.jugador:
-                jugador = self.jugador.sprite
+            jugador = self.jugador.sprite
 
-                pygame.draw.rect(self.pantalla, (0, 0, 255), jugador.rect, 2)
+            pygame.draw.rect(self.pantalla, (0, 0, 255), jugador.rect, 2)
 
-                for enemigo in self.sprites_enemigos:
-                    pygame.draw.rect(
-                        self.pantalla, (255, 0, 0), enemigo.rect, 2
-                    )
-                for item in self.sprites_items:
-                    pygame.draw.rect(
-                        self.pantalla, (0, 255, 255), item.rect, 2
-                    )
-                for proyectil in jugador.proyectiles:
-                    pygame.draw.rect(
-                        self.pantalla, (255, 255, 255), proyectil.rect, 2
-                    )
-                for trampa in self.sprites_pinchos:
+            for enemigo in self.sprites_enemigos:
+                pygame.draw.rect(self.pantalla, (255, 0, 0), enemigo.rect, 2)
+            for item in self.sprites_items:
+                pygame.draw.rect(self.pantalla, (0, 255, 255), item.rect, 2)
+            for proyectil in jugador.proyectiles:
+                pygame.draw.rect(
+                    self.pantalla, (255, 255, 255), proyectil.rect, 2
+                )
+            for trampa in self.sprites_pinchos:
+                pygame.draw.rect(self.pantalla, (255, 0, 0), trampa.rect, 2)
+            for enemigo in self.sprites_enemigos:
+                pygame.draw.rect(self.pantalla, (255, 0, 0), enemigo.rect, 2)
+            for hongo in self.sprites_fg_hongos:
+                pygame.draw.rect(self.pantalla, (0, 255, 0), hongo.rect, 2)
+
+            if self.is_nivel_2:
+                for trampa in self.sprites_trampa_laser:
                     pygame.draw.rect(
                         self.pantalla, (255, 0, 0), trampa.rect, 2
                     )
-                for enemigo in self.sprites_enemigos:
+            elif self.is_lvl_3:
+                if self.jefe:
                     pygame.draw.rect(
-                        self.pantalla, (255, 0, 0), enemigo.rect, 2
+                        self.pantalla, (255, 0, 0), self.jefe.rect, 2
                     )
-                for hongo in self.sprites_fg_hongos:
-                    pygame.draw.rect(self.pantalla, (0, 255, 0), hongo.rect, 2)
-
-                if self.is_nivel_2:
-                    for trampa in self.sprites_trampa_laser:
-                        pygame.draw.rect(
-                            self.pantalla, (255, 0, 0), trampa.rect, 2
-                        )
-                elif self.is_lvl_3:
-                    if self.jefe:
-                        pygame.draw.rect(
-                            self.pantalla, (255, 0, 0), self.jefe.rect, 2
-                        )
-                        pygame.draw.rect(
-                            self.pantalla, (255, 0, 0), self.jefe.rayo_rect, 2
-                        )
-                        pygame.draw.rect(
-                            self.pantalla, (0, 255, 0), self.jefe.head_rect, 2
-                        )
-                    if jugador.gd:
-                        pygame.draw.rect(
-                            self.pantalla, (0, 255, 0), jugador.gd.rect, 2
-                        )
+                    pygame.draw.rect(
+                        self.pantalla, (255, 0, 0), self.jefe.rayo_rect, 2
+                    )
+                    pygame.draw.rect(
+                        self.pantalla, (0, 255, 0), self.jefe.head_rect, 2
+                    )
+                if jugador.gd:
+                    pygame.draw.rect(
+                        self.pantalla, (0, 255, 0), jugador.gd.rect, 2
+                    )

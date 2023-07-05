@@ -141,7 +141,6 @@ class FormPrincipal(Form):
         pygame.quit()
         sys.exit()
 
-
     def update(self, lista_eventos):
         if self.verificar_dialog_result():  # -> si tengo un modal
             if self.active:
@@ -158,17 +157,17 @@ class FormPrincipal(Form):
 
     def set_lvl_actual(self, numero: int):
         if numero == 1:
-            if leer_puntaje(f'nivel_1'):
+            if leer_puntaje(f"nivel_1"):
                 self.lvl_actual = numero
                 self.flag_cambio_nivel = True
             else:
-                print('Completar el nivel 1 primero')
+                print("Completar el nivel 1 primero")
         elif numero == 2:
-            if leer_puntaje(f'nivel_1') and leer_puntaje(f'nivel_2'):
+            if leer_puntaje(f"nivel_1") and leer_puntaje(f"nivel_2"):
                 self.lvl_actual = numero
                 self.flag_cambio_nivel = True
             else:
-                print('Completar los niveles 1 y 2 primero')
+                print("Completar los niveles 1 y 2 primero")
         elif numero == 0:
             self.lvl_actual = numero
             self.flag_cambio_nivel = True

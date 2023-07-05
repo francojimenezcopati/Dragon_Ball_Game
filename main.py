@@ -16,6 +16,7 @@ while True:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
         scene_manager.run(dt, eventos)
 
         pygame.display.flip()

@@ -149,9 +149,9 @@ class ModalBotones(Form):
         func_opc=None,
         flag_play=None,
         volumen=None,
-        pausa = None,
-        flag_efectos = None,
-        checkear_home = None
+        pausa=None,
+        flag_efectos=None,
+        checkear_home=None,
     ):
         super().__init__(
             screen, x, y, w, h, color_background, color_border, active
@@ -160,16 +160,19 @@ class ModalBotones(Form):
         self.pausa = pausa
         self.flag_efectos = flag_efectos
         self.checkear_home = checkear_home
-        
+
         self.mute_efects_img = load(
             "Dragon_Ball\\resources\GUI\\botones\\Defined\\Efectos_Mute.png"
         ).convert_alpha()
-        self.mute_efects_img = pygame.transform.scale(self.mute_efects_img, (96, 96))
+        self.mute_efects_img = pygame.transform.scale(
+            self.mute_efects_img, (96, 96)
+        )
         self.unmute_efects_img = load(
             "Dragon_Ball\\resources\GUI\\botones\\Defined\\Efectos_Unmute.png"
         ).convert_alpha()
-        self.unmute_efects_img = pygame.transform.scale(self.unmute_efects_img, (96, 96))
-
+        self.unmute_efects_img = pygame.transform.scale(
+            self.unmute_efects_img, (96, 96)
+        )
 
         self.flag_play = flag_play
 
@@ -181,7 +184,6 @@ class ModalBotones(Form):
             "Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Unmute.png"
         ).convert_alpha()
         self.unmute_img = pygame.transform.scale(unmute_img, (96, 96))
-
 
         self.volumen = volumen
 
@@ -290,13 +292,13 @@ class ModalBotones(Form):
             self.lista_widgets.append(self.btn_lvl_3)
         else:
             if self.pausa:
-                centrar = 200-48
-                btn_abajo = 'salir'
-                boton = 'pausa'
+                centrar = 200 - 48
+                btn_abajo = "salir"
+                boton = "pausa"
             else:
                 centrar = 252
-                btn_abajo = 'atras'
-                boton = 'opciones'
+                btn_abajo = "atras"
+                boton = "opciones"
             self.btn_titulo = Button_Image(
                 self._slave,
                 x,
@@ -317,8 +319,6 @@ class ModalBotones(Form):
             else:
                 path_e = "Dragon_Ball\\resources\GUI\\botones\\Defined\\Efectos_Mute.png"
 
-            
-
             self.btn_mute_music = Button_Image(
                 self._slave,
                 x,
@@ -336,7 +336,7 @@ class ModalBotones(Form):
                     self._slave,
                     x,
                     y,
-                    400-48,
+                    400 - 48,
                     y_btn + 160,
                     96,
                     96,
@@ -398,7 +398,7 @@ class ModalBotones(Form):
             self.flag_play = True
             self.btn_mute_music._slave = self.unmute_img
         self.func_opc(False, True, self.flag_play, self.volumen, False, False)
-    
+
     def alternar_efectos(self, param):
         if self.flag_efectos:
             self.flag_efectos = False
@@ -443,6 +443,7 @@ class ModalBotones(Form):
                 widget.update(lista_eventos)
             if self.opciones:
                 self.set_volumen()
+
 
 def leer_puntaje(nivel):
     try:

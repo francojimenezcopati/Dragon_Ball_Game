@@ -11,20 +11,26 @@ from lvl_data import *
 from interfaz import *
 from GUI.config import *
 from error import error
-from GUI.utils import * 
+from GUI.utils import *
 
 
-class SceneManager():
+class SceneManager:
     def __init__(self):
         self.lista_niveles = [lvl_0, lvl_1, lvl_2]
         self.nivel = None
-        
-        self.lore_inicio = pygame.image.load('Dragon_Ball\\resources\GUI\Lore\Lore_1.png').convert()
-        self.lore_mid = pygame.image.load('Dragon_Ball\\resources\GUI\Lore\Lore_2.png').convert()
-        self.lore_final = pygame.image.load('Dragon_Ball\\resources\GUI\Lore\Lore_3.png').convert()
-        
+
+        self.lore_inicio = pygame.image.load(
+            "Dragon_Ball\\resources\GUI\Lore\Lore_1.png"
+        ).convert()
+        self.lore_mid = pygame.image.load(
+            "Dragon_Ball\\resources\GUI\Lore\Lore_2.png"
+        ).convert()
+        self.lore_final = pygame.image.load(
+            "Dragon_Ball\\resources\GUI\Lore\Lore_3.png"
+        ).convert()
+
         self.flag_lore = True
-        
+
         self.flag_pausa = False
         self.flag_pausa_init = False
 
@@ -35,7 +41,15 @@ class SceneManager():
 
         self.forms = [
             FormInicio(
-                pantalla, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, "white", "red", 5, True
+                pantalla,
+                0,
+                0,
+                SCREEN_WIDTH,
+                SCREEN_HEIGHT,
+                "white",
+                "red",
+                5,
+                True,
             ),
             FormPrincipal(
                 pantalla,
@@ -49,19 +63,19 @@ class SceneManager():
                 True,
             ),
             FormFinal(pantalla, 300, 50, 600, 600, "white", "red", 5),
-            FormPausa(pantalla, 300, 50, 600, 600, "white", "red", 5)
+            FormPausa(pantalla, 300, 50, 600, 600, "white", "red", 5),
         ]
 
         self.form_actual = self.forms[0]
 
         # -------------------
-    
+
     def run(self, dt, eventos):
         global scene_switch
         global home
         global flag_victoria
         global jugador
-        
+
         try:
             match scene_switch:
                 case 0:
@@ -72,21 +86,20 @@ class SceneManager():
                     self.lore_scene(eventos)
                 case 3:
                     self.nivel_run(dt, eventos)
-                    
+
                     if self.nivel.menu_victoria:
                         self.victoria(eventos)
         except Exception:
             self.forms[1].bg_music.set_volume(0)
             error()
-    
-    
+
     def menu_principal(self, eventos):
         global scene_switch
         global flag_victoria
         global home
-        
+
         self.form_actual = self.forms[1]
-        if home: # Cuando se toca la casita al final del nivel para volver
+        if home:  # Cuando se toca la casita al final del nivel para volver
             self.form_actual.bg_music.play(-1)
             self.flag_pausa_init = False
             self.flag_pausa = False
@@ -103,7 +116,10 @@ class SceneManager():
                 self.nivel_3 = False
                 self.nivel_2 = True
                 self.nivel = Nivel(
-                    self.lista_niveles[self.lvl_elegido], pantalla, self.nivel_2, self.nivel_3
+                    self.lista_niveles[self.lvl_elegido],
+                    pantalla,
+                    self.nivel_2,
+                    self.nivel_3,
                 )
             elif self.lista_niveles[self.lvl_elegido] == lvl_2:
                 self.nivel_3 = True
@@ -111,45 +127,45 @@ class SceneManager():
             else:
                 self.nivel_2 = False
                 self.nivel_3 = False
-    
-    
+
     def lore_scene(self, eventos):
         global scene_switch
-        
+
         if self.nivel_3:
             lore = self.lore_mid
         else:
             lore = self.lore_inicio
         if self.flag_lore:
-            pantalla.blit(lore, (0,0))
+            pantalla.blit(lore, (0, 0))
             self.flag_lore = False
-        
+
         for event in eventos:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     scene_switch = 3
                     self.flag_lore = True
                     self.nivel = Nivel(
-                        self.lista_niveles[self.lvl_elegido], pantalla, self.nivel_2, self.nivel_3
+                        self.lista_niveles[self.lvl_elegido],
+                        pantalla,
+                        self.nivel_2,
+                        self.nivel_3,
                     )
-    
-    
+
     def nivel_run(self, dt, eventos):
         global jugador
-        
+
         for event in eventos:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.flag_pausa = not self.flag_pausa
                     self.nivel.alternar_pausa()
-        
-        
+
         if self.flag_pausa:
             self.pausa(eventos)
-        
+
         if jugador:
-                self.nivel.run(dt, eventos)
-                jugador = self.nivel.jugador.sprite
+            self.nivel.run(dt, eventos)
+            jugador = self.nivel.jugador.sprite
         if jugador:
             if self.nivel.running:
                 imprimir_interfaz(
@@ -163,15 +179,17 @@ class SceneManager():
         else:  # Si el sprite del jugador se murio, se resetea el nivel
             self.nivel.stop()
             self.nivel = Nivel(
-                self.lista_niveles[self.lvl_elegido], pantalla, self.nivel_2, self.nivel_3
+                self.lista_niveles[self.lvl_elegido],
+                pantalla,
+                self.nivel_2,
+                self.nivel_3,
             )
             jugador = self.nivel.jugador.sprite
-    
-    
+
     def pausa(self, eventos):
         global scene_switch
         global home
-        
+
         if not self.flag_pausa_init:
             self.flag_pausa_init = True
             self.forms[3].inicializar()
@@ -179,25 +197,24 @@ class SceneManager():
         if home:
             self.nivel.stop()
             scene_switch = 1
-    
-    
+
     def victoria(self, eventos):
         global scene_switch
         global home
         global flag_victoria
-        
+
         jugador = self.nivel.jugador.sprite
         self.nivel.stop()
 
         if flag_victoria:
             flag_victoria = False
             if self.nivel_2:
-                nivel = 'nivel_2'
+                nivel = "nivel_2"
             elif self.nivel_3:
-                nivel = 'nivel_3'
+                nivel = "nivel_3"
             else:
-                nivel = 'nivel_1'
-            
+                nivel = "nivel_1"
+
             guardar_puntaje(nivel, int(self.nivel.tiempo), jugador.score)
 
             self.form_actual = self.forms[2]
@@ -211,15 +228,14 @@ class SceneManager():
                 self.lore_3(eventos)
             else:
                 scene_switch = 1
-    
-    
+
     def lore_3(self, eventos):
         global scene_switch
-        
+
         if self.flag_lore:
             self.flag_lore = False
-            pantalla.blit(self.lore_final, (0,0))
-        
+            pantalla.blit(self.lore_final, (0, 0))
+
         for event in eventos:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
