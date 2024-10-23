@@ -8,7 +8,7 @@ def imprimir_interfaz(
 ):
     # Barra vida
     corazon = pygame.image.load(
-        "Dragon_Ball\\resources\HUD\pixel_art_corazon.png"
+        "resources\HUD\pixel_art_corazon.png"
     )
     corazon = pygame.transform.rotozoom(corazon, 0, 0.1)
     altura = 20
@@ -29,7 +29,7 @@ def imprimir_interfaz(
     pantalla.blit(corazon, (5, 10))
 
     # Barra SSJ
-    ssj = pygame.image.load("Dragon_Ball\\resources\HUD\ssj_simbolo.png")
+    ssj = pygame.image.load("resources\HUD\ssj_simbolo.png")
     ssj = pygame.transform.rotozoom(ssj, 0, 0.1)
 
     rect = pygame.Rect(SCREEN_WIDTH - 314, altura - 2, 304, 22)
@@ -43,7 +43,7 @@ def imprimir_interfaz(
 
     # Barra genkidama
     if gd_bool:
-        gd = pygame.image.load("Dragon_Ball\\resources\proyectiles\\5.png")
+        gd = pygame.image.load("resources\proyectiles\\5.png")
         gd = pygame.transform.rotozoom(gd, 0, 0.45)
 
         rect = pygame.Rect(SCREEN_WIDTH - 314, altura * 4 - 2, 304, 22)

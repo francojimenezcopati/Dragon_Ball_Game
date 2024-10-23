@@ -7,7 +7,7 @@ from ajustes import *
 class Personaje(Objeto):
     def __init__(self, velocidad, vida, ataque, pos):
         super().__init__(
-            pos, imagen="Dragon_Ball\\resources\goku\goku_base\quieto\\0.png"
+            pos, imagen="resources\goku\goku_base\quieto\\0.png"
         )
         self.vida = vida
         self.ataque = ataque

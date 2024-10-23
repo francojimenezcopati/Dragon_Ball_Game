@@ -40,13 +40,13 @@ def guardar_puntaje(nivel, tiempo, score):
         dict_jugador["Nombre"] = f'Pepe_{len(data["Jugadores"])+1}'
         data["Jugadores"].append(dict_jugador)
 
-    with open(f"Dragon_Ball/{nivel}_data.json", "w") as archivo:
+    with open(f"{nivel}_data.json", "w") as archivo:
         json.dump(data, archivo, indent=4)
 
 
 def leer_puntaje(nivel):
     try:
-        with open(f"Dragon_Ball/{nivel}_data.json") as archivo:
+        with open(f"{nivel}_data.json") as archivo:
             data = json.load(archivo)
         return data
     except:

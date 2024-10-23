@@ -47,7 +47,7 @@ class FormPausa(Form):
 
         self.volumen = 0.1
 
-        # img = pygame.image.load('Dragon_Ball\\resources\GUI\Menu_opciones.png').convert_alpha()
+        # img = pygame.image.load('resources\GUI\Menu_opciones.png').convert_alpha()
         # self.img = pygame.transform.scale(img, (w, h))
 
     def inicializar(self):
@@ -62,7 +62,7 @@ class FormPausa(Form):
             "white",
             "white",
             True,
-            opciones="Dragon_Ball\\resources\GUI\Menu_opciones.png",
+            opciones="resources\GUI\Menu_opciones.png",
             func_opc=self.funcion_opciones,
             flag_play=self.flag_play,
             volumen=self.volumen,

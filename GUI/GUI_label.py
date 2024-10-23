@@ -8,28 +8,31 @@ class Label(Widget):
         self, screen, x, y, w, h, text, font, font_size, font_color, path_image
     ):
         super().__init__(screen, x, y, w, h)
+        try:
+            pygame.font.init()
 
-        pygame.font.init()
+            self._text = text
+            self._font = pygame.font.SysFont(font, font_size)
+            self._font_color = font_color
+            # if path_image != "":
+            aux_image = pygame.image.load(path_image)
+            aux_image = pygame.transform.scale(aux_image, (w, h))
+            # else:
+            # aux_image = pygame.Surface((w,h))
+            # aux_image.set_alpha(0)  # Transparente
 
-        self._text = text
-        self._font = pygame.font.SysFont(font, font_size)
-        self._font_color = font_color
-        # if path_image != "":
-        aux_image = pygame.image.load(path_image)
-        aux_image = pygame.transform.scale(aux_image, (w, h))
-        # else:
-        # aux_image = pygame.Surface((w,h))
-        # aux_image.set_alpha(0)#Transparente
+            self._slave = aux_image
+            self.img_original = aux_image.copy()
 
-        self._slave = aux_image
-        self.img_original = aux_image.copy()
+            self.slave_rect = self._slave.get_rect()
 
-        self.slave_rect = self._slave.get_rect()
+            self.slave_rect.x = self._x
+            self.slave_rect.y = self._y
 
-        self.slave_rect.x = self._x
-        self.slave_rect.y = self._y
+            self.render()
+        except Exception as e:
+            print(e)
 
-        self.render()
 
     def render(self):
         self._slave.blit(self.img_original, (0, 0))

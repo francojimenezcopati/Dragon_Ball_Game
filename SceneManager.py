@@ -20,14 +20,21 @@ class SceneManager:
         self.nivel = None
 
         self.lore_inicio = pygame.image.load(
-            "Dragon_Ball\\resources\GUI\Lore\Lore_1.png"
+            "resources\GUI\Lore\Lore_1.png"
         ).convert()
         self.lore_mid = pygame.image.load(
-            "Dragon_Ball\\resources\GUI\Lore\Lore_2.png"
+            "resources\GUI\Lore\Lore_2.png"
         ).convert()
         self.lore_final = pygame.image.load(
-            "Dragon_Ball\\resources\GUI\Lore\Lore_3.png"
+            "resources\GUI\Lore\Lore_3.png"
         ).convert()
+        
+        print()
+        print("--- TECLAS ---")
+        print("Disparo: 'F'")
+        print("Convertirse en SSJ: 'D'")
+        print("Genki Dama (lvl 3): 'S'")
+        print()
 
         self.flag_lore = True
 
@@ -202,32 +209,36 @@ class SceneManager:
         global scene_switch
         global home
         global flag_victoria
+        try:
+            jugador = self.nivel.jugador.sprite
+            self.nivel.stop()
 
-        jugador = self.nivel.jugador.sprite
-        self.nivel.stop()
+            if flag_victoria:
+                flag_victoria = False
+                if self.nivel_2:
+                    nivel = "nivel_2"
+                elif self.nivel_3:
+                    nivel = "nivel_3"
+                else:
+                    nivel = "nivel_1"
 
-        if flag_victoria:
-            flag_victoria = False
-            if self.nivel_2:
-                nivel = "nivel_2"
-            elif self.nivel_3:
-                nivel = "nivel_3"
-            else:
-                nivel = "nivel_1"
+                guardar_puntaje(nivel, int(self.nivel.tiempo), jugador.score)
 
-            guardar_puntaje(nivel, int(self.nivel.tiempo), jugador.score)
+                self.form_actual = self.forms[2]
 
-            self.form_actual = self.forms[2]
+                self.form_actual.tiempo_jugador = str(int(self.nivel.tiempo))
+                self.form_actual.inicializar(nivel)
+            
 
-            self.form_actual.tiempo_jugador = str(int(self.nivel.tiempo))
-            self.form_actual.inicializar(nivel)
+            home = self.form_actual.update(eventos)
+            if home:
+                if self.nivel_3:
+                    self.lore_3(eventos)
+                else:
+                    scene_switch = 1
+        except Exception as e:
+            print(e)
 
-        home = self.form_actual.update(eventos)
-        if home:
-            if self.nivel_3:
-                self.lore_3(eventos)
-            else:
-                scene_switch = 1
 
     def lore_3(self, eventos):
         global scene_switch

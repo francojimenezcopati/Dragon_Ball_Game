@@ -135,7 +135,7 @@ class Nivel:
             largo = len(terreno_layout[0]) * TILE_SIZE
             self.mar = Mar(
                 (0, SCREEN_HEIGHT - 40),
-                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\agua",
+                "niveles\\niveles\graficos\\terreno\\agua",
                 largo,
             )
 
@@ -237,7 +237,7 @@ class Nivel:
                     match tipo:
                         case "terreno":
                             terrenos = cargar_terreno(
-                                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\terrain_tiles.png"
+                                "niveles\\niveles\graficos\\terreno\\terrain_tiles.png"
                             )
                             terreno = terrenos[int(valor)]
                             sprite = Plataforma(
@@ -245,14 +245,14 @@ class Nivel:
                             )
                         case "pasto":
                             pastos = cargar_terreno(
-                                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\grass.png"
+                                "niveles\\niveles\graficos\\terreno\\grass.png"
                             )
                             pasto = pastos[int(valor)]
                             sprite = Plataforma(
                                 (x, y), (TILE_SIZE, TILE_SIZE), pasto
                             )
                         case "cajas":
-                            path = "Dragon_Ball\\niveles\\niveles\graficos\\terreno\crate.png"
+                            path = "niveles\\niveles\graficos\\terreno\crate.png"
                             sprite = Plataforma(
                                 (x, y), (TILE_SIZE, TILE_SIZE), path
                             )
@@ -260,10 +260,10 @@ class Nivel:
                         case "items":
                             sprite = Recompensa(
                                 (x, y),
-                                "Dragon_Ball\\niveles\\niveles\graficos\items\semilla",
+                                "niveles\\niveles\graficos\items\semilla",
                             )
                         case "fg_hongos":
-                            path = "Dragon_Ball\\niveles\\niveles\graficos\\terreno\hongos"
+                            path = "niveles\\niveles\graficos\\terreno\hongos"
                             hongos = cargar_imagenes_carpeta(path)
                             tipo_hongo = int(valor) - 9
                             hongo = hongos[tipo_hongo]
@@ -274,7 +274,7 @@ class Nivel:
                                 tipo_hongo,
                             )
                         case "bg_hongos":
-                            path = "Dragon_Ball\\niveles\\niveles\graficos\\terreno\hongos"
+                            path = "niveles\\niveles\graficos\\terreno\hongos"
                             hongos = cargar_imagenes_carpeta(path)
                             tipo_hongo = int(valor) - 9
                             hongo = hongos[tipo_hongo]
@@ -298,13 +298,13 @@ class Nivel:
                                 (x, y), (TILE_SIZE, TILE_SIZE), None, False
                             )
                         case "nubes":
-                            path = "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\nubes"
+                            path = "niveles\\niveles\graficos\\terreno\\nubes"
                             nubes = cargar_imagenes_carpeta(path)
                             nube = nubes[int(valor)]
                             sprite = Objeto((x, y), imagen=nube)
                         case "fondo_cueva":
                             terrenos = cargar_terreno(
-                                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\terrain_tiles.png"
+                                "niveles\\niveles\graficos\\terreno\\terrain_tiles.png"
                             )
                             terreno = terrenos[int(valor)]
                             sprite = Plataforma(
@@ -313,13 +313,13 @@ class Nivel:
                         case "pinchos":
                             sprite = Trampa(
                                 (x, y),
-                                "Dragon_Ball\\resources\enemigos\spikes.png",
+                                "resources\enemigos\spikes.png",
                                 5,
                             )
                         case "trampa_laser":
                             sprite = TrampaLaser(
                                 (x, y),
-                                "Dragon_Ball\\resources\enemigos\\trampa_laser\\0.png",
+                                "resources\enemigos\\trampa_laser\\0.png",
                                 2,
                             )
                             sprite.rect.midbottom = (
@@ -349,7 +349,7 @@ class Nivel:
                 elif valor == "1":
                     sprite = Item(
                         (x, y),
-                        "Dragon_Ball\\resources\meta\\bola de dragon.png",
+                        "resources\meta\\bola de dragon.png",
                     )
                     self.final.add(sprite)
 

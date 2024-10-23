@@ -37,7 +37,7 @@ class FormPrincipal(Form):
             active,
         )
 
-        img = pygame.image.load("Dragon_Ball\\resources\GUI\menu_general.png")
+        img = pygame.image.load("resources\GUI\menu_general.png")
         self.img = pygame.transform.scale(img, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
         self.lvl_actual = None
@@ -50,7 +50,7 @@ class FormPrincipal(Form):
 
         pygame.mixer.init()
         self.bg_music = pygame.mixer.Sound(
-            "Dragon_Ball\\resources\GUI\musica\\bg_menu_music.mp3"
+            "resources\GUI\musica\\bg_menu_music.mp3"
         )
         self.bg_music.set_volume(self.volumen)
         self.bg_music.play(-1)
@@ -63,7 +63,7 @@ class FormPrincipal(Form):
             150,
             LARGO_BOTON,
             ALTURA_BOTON,
-            "Dragon_Ball\\resources\GUI\\botones\Defined\\niveles.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
+            "resources\GUI\\botones\Defined\\niveles.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
             self.btn_niveles_click,
             "a",
         )
@@ -75,7 +75,7 @@ class FormPrincipal(Form):
             150 + ESPACIO_ENTRE_BOTONES_Y,
             LARGO_BOTON,
             ALTURA_BOTON,
-            "Dragon_Ball\\resources\GUI\\botones\Defined\opciones.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
+            "resources\GUI\\botones\Defined\opciones.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
             self.btn_opciones_click,
             "a",
         )
@@ -87,7 +87,7 @@ class FormPrincipal(Form):
             150 + ESPACIO_ENTRE_BOTONES_Y * 2,
             LARGO_BOTON,
             ALTURA_BOTON,
-            "Dragon_Ball\\resources\GUI\\botones\Defined\salir.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
+            "resources\GUI\\botones\Defined\salir.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
             self.btn_salir_click,
             "a",
         )
@@ -108,7 +108,7 @@ class FormPrincipal(Form):
             "white",
             "white",
             True,
-            "Dragon_Ball\\resources\GUI\menu_general.png",
+            "resources\GUI\menu_general.png",
             funcion=self.set_lvl_actual,
             volumen=self.volumen,
         )
@@ -127,12 +127,12 @@ class FormPrincipal(Form):
             "white",
             "white",
             True,
-            opciones="Dragon_Ball\\resources\GUI\Menu_opciones.png",
+            opciones="resources\GUI\Menu_opciones.png",
             func_opc=self.funcion_opciones,
             flag_play=self.flag_play,
             volumen=self.volumen,
         )
-
+        
         self.show_dialog(
             opciones_menu
         )  # -> Muestra un formulario y desaparece el otro

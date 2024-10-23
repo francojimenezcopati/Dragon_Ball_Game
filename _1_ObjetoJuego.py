@@ -41,13 +41,13 @@ class Cielo:
         self.middle = middle
 
         self.top = load(
-            "Dragon_Ball\\niveles\\niveles\graficos\\terreno\cielo\sky_top.png"
+            "niveles\\niveles\graficos\\terreno\cielo\sky_top.png"
         )
         self.mid = load(
-            "Dragon_Ball\\niveles\\niveles\graficos\\terreno\cielo\sky_middle.png"
+            "niveles\\niveles\graficos\\terreno\cielo\sky_middle.png"
         )
         self.bottom = load(
-            "Dragon_Ball\\niveles\\niveles\graficos\\terreno\cielo\\sky_bottom.png"
+            "niveles\\niveles\graficos\\terreno\cielo\\sky_bottom.png"
         )
 
         self.top = pygame.transform.scale(self.top, (SCREEN_WIDTH, TILE_SIZE))

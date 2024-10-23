@@ -40,7 +40,7 @@ class FormFinal(Form):
 
         self.tiempo_jugador = 1
 
-        # img = pygame.image.load('Dragon_Ball\\resources\GUI\Menu_opciones.png').convert_alpha()
+        # img = pygame.image.load('resources\GUI\Menu_opciones.png').convert_alpha()
         # self.img = pygame.transform.scale(img, (w, h))
 
     def inicializar(self, nivel):
@@ -57,7 +57,7 @@ class FormFinal(Form):
             "purple",
             "white",
             True,
-            "menu\API FORMS\Window.png",
+            "GUI\Window.png",
             dict_score,
             100,
             10,
@@ -90,7 +90,7 @@ class FormFinal(Form):
 
 def leer_puntaje(nivel):
     try:
-        with open(f"Dragon_Ball/{nivel}_data.json") as archivo:
+        with open(f"{nivel}_data.json") as archivo:
             data = json.load(archivo)
         return data
     except:

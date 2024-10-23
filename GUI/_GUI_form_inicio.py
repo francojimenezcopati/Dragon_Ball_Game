@@ -38,10 +38,10 @@ class FormInicio(Form):
 
         self.tiempo_parpadeo = 0
 
-        bg = pygame.image.load("Dragon_Ball\\resources\GUI\menu_start.png")
+        bg = pygame.image.load("resources\GUI\menu_start.png")
         self.bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-        self.play = pygame.image.load("Dragon_Ball\\resources\GUI\start.png")
+        self.play = pygame.image.load("resources\GUI\start.png")
         self.play = pygame.transform.scale2x(self.play)
 
         self.render()

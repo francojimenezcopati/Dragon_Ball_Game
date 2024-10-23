@@ -39,7 +39,7 @@ class Enemigo(Personaje):
 
         else:  # ----------------------------------------- -> Si es el jefe
             self.frames = cargar_imagenes_carpeta(
-                "Dragon_Ball\\resources\\final_boss\\boss"
+                "resources\\final_boss\\boss"
             )
             self.frames = agrandar_jefe(self.frames)
             self.image = self.frames[0]
@@ -50,7 +50,7 @@ class Enemigo(Personaje):
 
             # disparo ---
             self.rayo_cargando = pygame.image.load(
-                "Dragon_Ball\\resources\\final_boss\\4.png"
+                "resources\\final_boss\\4.png"
             )
             self.rayo_cargando = pygame.transform.rotozoom(
                 self.rayo_cargando, 0, 4.195
@@ -60,7 +60,7 @@ class Enemigo(Personaje):
             )
 
             self.rayo = pygame.image.load(
-                "Dragon_Ball\\resources\\final_boss\\5.png"
+                "resources\\final_boss\\5.png"
             )
             self.rayo = pygame.transform.rotozoom(self.rayo, 0, 4.195)
             self.rayo = pygame.transform.scale(
@@ -99,7 +99,7 @@ class Enemigo(Personaje):
                 robot = "robot_capa"
                 escalar = True
         self.animaciones = cargar_animaciones_personaje(
-            f"Dragon_Ball\\resources\enemigos\{robot}",
+            f"resources\enemigos\{robot}",
             ANCHO_PERSONAJE,
             ALTO_PERSONAJE,
             True,
@@ -163,7 +163,7 @@ class Enemigo(Personaje):
 
         enemy_shoot_sound.play()
 
-        path = "Dragon_Ball\\resources\enemigos\Destroyer\proyectil\\0.png"
+        path = "resources\enemigos\Destroyer\proyectil\\0.png"
         disparo = Proyectil(
             (x, y), path, VELOCIDAD_PROYECTIL_ENEMIGO, sentido, self.ataque
         )

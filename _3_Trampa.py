@@ -21,10 +21,10 @@ class TrampaLaser(Trampa):
         self.tiempo_espera = 0
         self.tiempo_disparo = 0
         self.imagen_df = pygame.image.load(
-            "Dragon_Ball\\resources\enemigos\\trampa_laser\\0.png"
+            "resources\enemigos\\trampa_laser\\0.png"
         )
         self.imagen_laser = pygame.image.load(
-            "Dragon_Ball\\resources\enemigos\\trampa_laser\\1.png"
+            "resources\enemigos\\trampa_laser\\1.png"
         )
 
     def disparar(self):
@@ -66,7 +66,7 @@ class Mar(Trampa):
 
             sprite = Trampa(
                 (x, nivel_mar),
-                "Dragon_Ball\\niveles\\niveles\graficos\\terreno\\agua\\1",
+                "niveles\\niveles\graficos\\terreno\\agua\\1",
                 10,
             )
             self.sprites.add(sprite)

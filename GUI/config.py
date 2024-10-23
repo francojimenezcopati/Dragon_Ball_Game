@@ -19,23 +19,23 @@ jugador = True
 # ----- sonidos -----
 
 # -- efectos --
-pikcup_sound = pygame.mixer.Sound("Dragon_Ball\\resources\sounds\pickup.wav")
+pikcup_sound = pygame.mixer.Sound("resources\sounds\pickup.wav")
 transformacion_sound = pygame.mixer.Sound(
-    "Dragon_Ball\\resources\sounds\\transformacion.wav"
+    "resources\sounds\\transformacion.wav"
 )
-daño_sound = pygame.mixer.Sound("Dragon_Ball\\resources\sounds\\daño.wav")
+daño_sound = pygame.mixer.Sound("resources\sounds\\daño.wav")
 
 enemy_shoot_sound = pygame.mixer.Sound(
-    "Dragon_Ball\\resources\sounds\\laser4.wav"
+    "resources\sounds\\laser4.wav"
 )
 
 bullet_impact_sound = pygame.mixer.Sound(
-    "Dragon_Ball\\resources\sounds\\bullet_impact.flac"
+    "resources\sounds\\bullet_impact.flac"
 )
 # -- ------- --
 
 bg_audio_game = pygame.mixer.Sound(
-    "Dragon_Ball\\resources\sounds\\bg_game_music.mp3"
+    "resources\sounds\\bg_game_music.mp3"
 )
 
 

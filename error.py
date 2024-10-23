@@ -2,7 +2,7 @@ import pygame
 from GUI.config import *
 from ajustes import SCREEN_WIDTH, SCREEN_HEIGHT
 
-error_img = pygame.image.load('Dragon_Ball\\resources\Errores\\dificultades_tecnicas.jpg')
+error_img = pygame.image.load('resources\Errores\\dificultades_tecnicas.jpg')
 error_img = pygame.transform.scale(error_img, (SCREEN_WIDTH, SCREEN_HEIGHT)).convert()
 
 flag = True

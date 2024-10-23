@@ -21,11 +21,11 @@ class Jugador(Personaje):
         self.gd_counter = 0
         self.tirar_gd = False
         self.frames_gd = cargar_imagenes_carpeta(
-            "Dragon_Ball\\resources\goku\\goku_genkidama"
+            "resources\goku\\goku_genkidama"
         )
         self.frames_gd = escalar_genkidama(self.frames_gd)
         self.gd_img = pygame.image.load(
-            "Dragon_Ball\\resources\proyectiles\genkidama.png"
+            "resources\proyectiles\genkidama.png"
         )
         x = self.rect.x - 10
         y = self.rect.y + 100
@@ -37,19 +37,19 @@ class Jugador(Personaje):
         self.esta_ssj = False
         self.transformandose = False
         self.frames_transformacion = cargar_imagenes_carpeta(
-            "Dragon_Ball\\resources\goku\\transformacion"
+            "resources\goku\\transformacion"
         )
 
         # Muerte
         self.frames_muerte = cargar_imagenes_carpeta(
-            "Dragon_Ball\\resources\goku\goku_muerte"
+            "resources\goku\goku_muerte"
         )
         self.velocidad_animacion_muerte = VELOCIDAD_ANIMACION_MUERTE
 
         # Herido
         self.herido = False
         self.hud_herido = pygame.image.load(
-            "Dragon_Ball\\resources\HUD\DAÑO\\bordes_rojos.png"
+            "resources\HUD\DAÑO\\bordes_rojos.png"
         )
         self.hud_herido = pygame.transform.scale(
             self.hud_herido, (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -64,7 +64,7 @@ class Jugador(Personaje):
         self.tiempo_inmortalidad = 0
 
         # animar
-        self.importar_animaciones("Dragon_Ball\\resources\goku\goku_base")
+        self.importar_animaciones("resources\goku\goku_base")
         self.estado = "quieto"
         self.sentido = "_derecha"
         self.image = self.animaciones[self.estado + self.sentido][
@@ -178,10 +178,10 @@ class Jugador(Personaje):
 
             if not self.esta_ssj:
                 path = (
-                    f"Dragon_Ball\\resources\proyectiles\proyectil_base{tipo}"
+                    f"resources\proyectiles\proyectil_base{tipo}"
                 )
             else:
-                path = f"Dragon_Ball\\resources\proyectiles\proyectil_mejorado{tipo}"
+                path = f"resources\proyectiles\proyectil_mejorado{tipo}"
 
             disparo = Proyectil(
                 (x, y), path, VELOCIDAD_PROYECTIL_JUGADOR, sentido, self.ataque
@@ -213,7 +213,7 @@ class Jugador(Personaje):
             self.ataque = ATAQUE_SSJ_JUGADOR
             self.esta_ssj = True
             flag = True
-            self.importar_animaciones("Dragon_Ball\\resources\goku\goku_ssj")
+            self.importar_animaciones("resources\goku\goku_ssj")
 
         self.image = self.frames_transformacion[int(self.frame_index)]
         if flag:  # para que no se deforme el rectangulo al final

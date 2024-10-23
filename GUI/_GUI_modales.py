@@ -54,7 +54,7 @@ class Modal(Form):
             "Verdana",
             30,
             "white",
-            "menu\API FORMS\\bar.png",
+            "GUI/bar.png",
         )
         self.lbl_col2 = Label(
             self._slave,
@@ -66,7 +66,7 @@ class Modal(Form):
             "Verdana",
             30,
             "white",
-            "menu\API FORMS\\bar.png",
+            "GUI/bar.png",
         )
         self.lbl_col3 = Label(
             self._slave,
@@ -78,7 +78,7 @@ class Modal(Form):
             "Verdana",
             30,
             "white",
-            "menu\API FORMS\\bar.png",
+            "GUI/bar.png",
         )
 
         self.lista_widgets.append(self.lbl_col1)
@@ -101,7 +101,7 @@ class Modal(Form):
                     "Verdana",
                     30,
                     "white",
-                    "menu\API FORMS\Table.png",
+                    "GUI/Table.png",
                 )
                 self.lista_widgets.append(jugador)
                 pos_inicial_x += w / 3 - margen_x
@@ -115,7 +115,7 @@ class Modal(Form):
             h - 70,
             50,
             50,
-            "menu\API FORMS\home.png",
+            "GUI/home.png",
             self.btn_home_click,
             "a",
         )
@@ -162,13 +162,13 @@ class ModalBotones(Form):
         self.checkear_home = checkear_home
 
         self.mute_efects_img = load(
-            "Dragon_Ball\\resources\GUI\\botones\\Defined\\Efectos_Mute.png"
+            "resources\GUI\\botones\\Defined\\Efectos_Mute.png"
         ).convert_alpha()
         self.mute_efects_img = pygame.transform.scale(
             self.mute_efects_img, (96, 96)
         )
         self.unmute_efects_img = load(
-            "Dragon_Ball\\resources\GUI\\botones\\Defined\\Efectos_Unmute.png"
+            "resources\GUI\\botones\\Defined\\Efectos_Unmute.png"
         ).convert_alpha()
         self.unmute_efects_img = pygame.transform.scale(
             self.unmute_efects_img, (96, 96)
@@ -177,11 +177,11 @@ class ModalBotones(Form):
         self.flag_play = flag_play
 
         mute_img = load(
-            "Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Mute.png"
+            "resources\GUI\\botones\\Defined\\Musica_Mute.png"
         ).convert_alpha()
         self.mute_img = pygame.transform.scale(mute_img, (96, 96))
         unmute_img = load(
-            "Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Unmute.png"
+            "resources\GUI\\botones\\Defined\\Musica_Unmute.png"
         ).convert_alpha()
         self.unmute_img = pygame.transform.scale(unmute_img, (96, 96))
 
@@ -237,7 +237,7 @@ class ModalBotones(Form):
                 y_btn,
                 w_btn,
                 h_btn,
-                "Dragon_Ball\\resources\GUI\\botones\Defined\\atras.png",
+                "resources\GUI\\botones\Defined\\atras.png",
                 self.btn_atras_click,
                 "abccc",
             )
@@ -249,7 +249,7 @@ class ModalBotones(Form):
                 y_btn - Y_ESPACIADO_BOTONES_2,
                 BOTON_2_ANCHO,
                 BOTON_2_ALTO,
-                f"Dragon_Ball\\resources\GUI\\botones\\Defined\\{lvl_3}.png",
+                f"resources\GUI\\botones\\Defined\\{lvl_3}.png",
                 self.btn_lvl_click,
                 "2",
             )
@@ -261,7 +261,7 @@ class ModalBotones(Form):
                 y_btn - Y_ESPACIADO_BOTONES_2 * 2,
                 BOTON_2_ANCHO,
                 BOTON_2_ALTO,
-                f"Dragon_Ball\\resources\GUI\\botones\\Defined\\{lvl_2}.png",
+                f"resources\GUI\\botones\\Defined\\{lvl_2}.png",
                 self.btn_lvl_click,
                 "1",
             )
@@ -273,7 +273,7 @@ class ModalBotones(Form):
                 y_btn - Y_ESPACIADO_BOTONES_2 * 3,
                 BOTON_2_ANCHO,
                 BOTON_2_ALTO,
-                f"Dragon_Ball\\resources\GUI\\botones\\Defined\\{lvl_1}.png",
+                f"resources\GUI\\botones\\Defined\\{lvl_1}.png",
                 self.btn_lvl_click,
                 "0",
             )
@@ -285,7 +285,7 @@ class ModalBotones(Form):
                 y_btn - Y_ESPACIADO_BOTONES_2 * 4,
                 LARGO_BOTON,
                 ALTURA_BOTON,
-                "Dragon_Ball\\resources\GUI\\botones\\Defined\\niveles_titulo.png",
+                "resources\GUI\\botones\\Defined\\niveles_titulo.png",
             )
             self.lista_widgets.append(self.btn_lvl_1)
             self.lista_widgets.append(self.btn_lvl_2)
@@ -307,17 +307,17 @@ class ModalBotones(Form):
                 y_btn,
                 LARGO_BOTON,
                 ALTURA_BOTON,
-                f"Dragon_Ball\\resources\GUI\\botones\\Defined\\{boton}_titulo.png",
+                f"resources\GUI\\botones\\Defined\\{boton}_titulo.png",
             )
 
             if self.flag_play:
-                path = "Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Unmute.png"
+                path = "resources\GUI\\botones\\Defined\\Musica_Unmute.png"
             else:
-                path = "Dragon_Ball\\resources\GUI\\botones\\Defined\\Musica_Mute.png"
+                path = "resources\GUI\\botones\\Defined\\Musica_Mute.png"
             if self.flag_efectos:
-                path_e = "Dragon_Ball\\resources\GUI\\botones\\Defined\\Efectos_Unmute.png"
+                path_e = "resources\GUI\\botones\\Defined\\Efectos_Unmute.png"
             else:
-                path_e = "Dragon_Ball\\resources\GUI\\botones\\Defined\\Efectos_Mute.png"
+                path_e = "resources\GUI\\botones\\Defined\\Efectos_Mute.png"
 
             self.btn_mute_music = Button_Image(
                 self._slave,
@@ -345,6 +345,7 @@ class ModalBotones(Form):
                     "a",
                 )
 
+
             self.label_volumen = Label(
                 self._slave,
                 470,
@@ -355,7 +356,7 @@ class ModalBotones(Form):
                 "Comic Sans",
                 15,
                 "white",
-                "menu\API FORMS\\Table.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
+                "GUI/Table.png",  # -> LE PUEDO PONER CUALQUIER IMAGEN
             )
             self.slider_volumen = Slider(
                 self._slave,
@@ -378,7 +379,7 @@ class ModalBotones(Form):
                 490,
                 LARGO_BOTON * 0.7,
                 ALTURA_BOTON * 0.7,
-                f"Dragon_Ball\\resources\GUI\\botones\Defined\\{btn_abajo}.png",
+                f"resources\GUI\\botones\Defined\\{btn_abajo}.png",
                 self.btn_atras_click,
                 "abccc",
             )
@@ -389,6 +390,8 @@ class ModalBotones(Form):
             self.lista_widgets.append(self.slider_volumen)
         self.lista_widgets.append(self.btn_atras)
         self.lista_widgets.append(self.btn_titulo)
+
+
 
     def alternar_musica(self, param):
         if self.flag_play:
@@ -447,7 +450,7 @@ class ModalBotones(Form):
 
 def leer_puntaje(nivel):
     try:
-        with open(f"Dragon_Ball/{nivel}_data.json") as archivo:
+        with open(f"{nivel}_data.json") as archivo:
             data = json.load(archivo)
         return data
     except:
