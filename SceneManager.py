@@ -31,6 +31,7 @@ class SceneManager:
         
         print()
         print("--- TECLAS ---")
+        print("Pausa: 'Esc'")
         print("Disparo: 'F'")
         print("Convertirse en SSJ: 'D'")
         print("Genki Dama (lvl 3): 'S'")
